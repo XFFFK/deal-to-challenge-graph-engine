@@ -36,6 +36,7 @@ node .\qa-smoke.cjs
 - `ARCHITECTURE.md`：输入验证、规范化、分类器、DAG、变更影响、质量门和导出层。
 - `SUBMISSION_CHECKLIST.md`：四包导入、样例输出、测试和演示检查项。
 - `DEMO_SCRIPT.md`：三分钟英文演示顺序和旁白。
+- `SUBMISSION_TEXT.md`：可直接用于提交表单的英文项目说明、运行方式和验证范围。
 - `LICENSE`：可随提交包一起分发的 MIT 许可证。
 - `sample-outputs/`：四个内置情境的可审阅 graph JSON、模型包和质量门结果；这些是 mock 输出，不冒充官方输入包。
 
