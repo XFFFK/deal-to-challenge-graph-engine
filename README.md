@@ -4,6 +4,8 @@
 
 公开演示：<https://deal-to-challenge-graph-engine.xufanke.chatgpt.site>
 
+GitHub Pages 备用演示：<https://xfffk.github.io/deal-to-challenge-graph-engine/>
+
 ## 运行
 
 在本目录启动静态文件服务器（直接双击 `index.html` 也能运行基础功能）：
