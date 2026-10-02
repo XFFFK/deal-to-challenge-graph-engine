@@ -1,0 +1,40 @@
+{
+  "architecture": {
+    "flows": [
+      {
+        "id": "FLOW-01",
+        "to": "review",
+        "from": "intake"
+      }
+    ],
+    "components": [
+      {
+        "name": "Identity boundary",
+        "id": "ARC-01"
+      }
+    ]
+  },
+  "requirements": [
+    {
+      "title": "Patient intake",
+      "id": "REQ-01"
+    }
+  ],
+  "title": "Clinical Intake & Patient Support Assistant",
+  "quality": {
+    "findings": [
+      {
+        "title": "Human review policy",
+        "id": "Q-01"
+      }
+    ],
+    "status": "review-required"
+  },
+  "risks": [
+    {
+      "title": "PHI access boundary",
+      "id": "RISK-01"
+    }
+  ],
+  "id": "DEAL_CLINICAL_MOCK"
+}

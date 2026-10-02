@@ -1,0 +1,16 @@
+{
+  "id": "DEAL_MEMBER_MOCK",
+  "title": "Member Experience Modernisation, Early Discovery",
+  "questions": [
+    {
+      "title": "Which systems are in scope?",
+      "id": "Q-M-01"
+    }
+  ],
+  "requirements": [
+    {
+      "title": "Member discovery",
+      "id": "REQ-M-01"
+    }
+  ]
+}

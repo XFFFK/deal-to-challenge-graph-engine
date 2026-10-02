@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Deal → Challenge Graph Engine</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">◈</span><span>Deal Compiler</span><span class="beta">MOCK MODE</span></div>
+      <div class="top-actions"><span class="source-pill">Local only · no AI key</span><button id="exportPlanBtn" class="secondary">导出人类可读计划</button><button id="exportBtn" class="primary">导出图与模型包 JSON</button></div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">TOPCODER OPERATING MODEL PLANNER</p>
+          <h1>从已批准的 Deal 包，编译成可执行 DAG。</h1>
+          <p class="lede">导入、校验、拆解并审阅执行节点。每个节点都保留来源追踪，并明确归类为 Flexible Talent、Challenge 或 Private Pod。</p>
+        </div>
+        <div class="hero-metric"><span id="readinessLabel">Review Required</span><strong id="readinessScore">68%</strong><small>package readiness</small></div>
+      </section>
+
+      <section class="control-strip panel">
+        <div class="control-group">
+          <label for="sampleSelect">样例 Deal</label>
+          <select id="sampleSelect">
+            <option value="clinical">Clinical Intake &amp; Patient Support</option>
+            <option value="claims">ClaimsDesk Modernization</option>
+            <option value="member">Member Experience · Early Discovery</option>
+            <option value="supply">Unified Supply Chain Analytics</option>
+          </select>
+          <button id="loadSampleBtn" class="secondary">加载样例</button>
+        </div>
+        <div class="import-control">
+          <label for="jsonFile">导入 JSON 包</label>
+          <input id="jsonFile" type="file" accept="application/json,.json">
+          <span id="importStatus" class="muted">未导入文件</span>
+        </div>
+        <div class="mode-note"><span class="dot"></span>Deterministic checks + mock recommendations</div>
+      </section>
+
+      <section class="summary-grid">
+        <article class="metric-card"><span class="metric-label">Source references</span><strong id="sourceCount">12</strong><small>preserved IDs</small></article>
+        <article class="metric-card"><span class="metric-label">Delivery nodes</span><strong id="nodeCount">6</strong><small id="nodeReadyText">4 ready · 2 review</small></article>
+        <article class="metric-card"><span class="metric-label">Execution waves</span><strong id="waveCount">4</strong><small>parallel-aware</small></article>
+        <article class="metric-card danger-card"><span class="metric-label">Blockers</span><strong id="blockerCount">3</strong><small>must resolve before handoff</small></article>
+      </section>
+
+      <div class="workspace-grid">
+        <section class="panel maturity-panel">
+          <div class="panel-heading"><div><p class="section-kicker">01 / INPUT READINESS</p><h2>包成熟度与阻塞项</h2></div><span id="maturityBadge" class="status-badge review">Review Required</span></div>
+          <div class="maturity-meter"><div id="meterFill" class="meter-fill"></div></div>
+          <div class="maturity-line"><strong id="maturityTitle">Review Required</strong><span id="maturityDescription">关键边界已出现，但仍有安全与数据处理决策。</span></div>
+          <div id="blockerList" class="blocker-list"></div>
+          <div class="quality-row"><span>Input validation</span><strong id="validationResult">8 / 10 checks passed</strong></div>
+        </section>
+
+        <section class="panel model-panel">
+          <div class="panel-heading"><div><p class="section-kicker">02 / OPERATING MODELS</p><h2>节点分配</h2></div><span class="muted">点击卡片查看依据</span></div>
+          <div id="modelBreakdown" class="model-breakdown"></div>
+          <div class="legend"><span><i class="legend-dot talent"></i>Flexible Talent</span><span><i class="legend-dot challenge"></i>Challenge</span><span><i class="legend-dot pod"></i>Private Pod</span></div>
+        </section>
+      </div>
+
+      <section class="panel graph-panel">
+        <div class="panel-heading graph-heading"><div><p class="section-kicker">03 / DELIVERY GRAPH</p><h2>执行 DAG <span class="mock-tag">MOCK</span></h2></div><div class="graph-tools"><span class="critical-key"><i></i>关键路径</span><button id="runQualityBtn" class="secondary">运行质量门</button></div></div>
+        <div id="graphCanvas" class="graph-canvas"></div>
+        <div class="graph-foot"><span>波次由依赖关系确定；关键路径以紫色边框标识。</span><strong id="criticalPathText">关键路径：N1 → N2 → N4 → N6 · 13d</strong></div>
+      </section>
+
+      <div class="lower-grid">
+        <section class="panel nodes-panel">
+          <div class="panel-heading"><div><p class="section-kicker">04 / TRACEABILITY</p><h2>节点清单</h2></div><select id="modelFilter" class="compact-select"><option value="all">全部模型</option><option value="flexible-talent">Flexible Talent</option><option value="challenge">Challenge</option><option value="private-pod">Private Pod</option></select></div>
+          <div id="nodeList" class="node-list"></div>
+        </section>
+        <section class="panel inspector-panel">
+          <div class="panel-heading"><div><p class="section-kicker">05 / INSPECTOR</p><h2 id="inspectorTitle">选择一个节点</h2></div><span id="provenanceBadge" class="provenance">—</span></div>
+          <div id="inspectorEmpty" class="empty-inspector">点击左侧节点，查看来源证据、分类理由与验收条件。</div>
+          <div id="inspectorBody" class="inspector-body hidden">
+            <div class="inspector-top"><span id="inspectorModel" class="model-tag"></span><span id="inspectorReady" class="readiness-tag"></span></div>
+            <p id="inspectorObjective" class="objective"></p>
+            <div class="detail-block"><span class="detail-label">分类理由</span><ul id="inspectorRationale"></ul></div>
+            <div class="detail-block"><span class="detail-label">来源追踪</span><div id="inspectorSources" class="source-chips"></div></div>
+            <div class="detail-block"><span class="detail-label">验收条件</span><p id="inspectorAcceptance" class="detail-text"></p></div>
+            <div class="detail-block"><span class="detail-label">模型执行包预览</span><pre id="executionPackage" class="package-preview"></pre></div>
+            <div class="detail-block dependency-editor"><span class="detail-label">依赖编辑</span><div id="dependencyList" class="dependency-list"></div><div class="dependency-add"><select id="dependencySelect" class="compact-select"><option value="">选择前置节点</option></select><button id="addDependencyBtn" class="secondary">添加依赖</button></div></div>
+            <div class="override-row"><label for="overrideModel">覆盖 operating model</label><select id="overrideModel"><option value="flexible-talent">Flexible Talent</option><option value="challenge">Challenge</option><option value="private-pod">Private Pod</option></select><button id="applyOverrideBtn" class="secondary">应用</button></div>
+            <p id="impactNote" class="impact-note hidden"></p>
+          </div>
+        </section>
+      </div>
+
+      <section class="panel validation-panel">
+        <div class="panel-heading"><div><p class="section-kicker">06 / QUALITY GATE</p><h2>交付前检查</h2></div><span id="qualityGateBadge" class="status-badge pass">PASS WITH REVIEW</span></div>
+        <div id="qualityChecks" class="quality-checks"></div>
+      </section>
+    </main>
+    <footer>本地 mock 原型 · 不会自动招聘、发起 Challenge、批准资金或提交外部平台</footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

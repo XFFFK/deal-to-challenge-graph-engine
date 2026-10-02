@@ -1,0 +1,40 @@
+{
+  "architecture": {
+    "flows": [
+      {
+        "id": "FLOW-CL-01",
+        "to": "billing",
+        "from": "claims"
+      }
+    ],
+    "components": [
+      {
+        "name": "Claims API",
+        "id": "ARC-CL-01"
+      }
+    ]
+  },
+  "requirements": [
+    {
+      "title": "Modernize claims intake",
+      "id": "REQ-CL-01"
+    }
+  ],
+  "title": "ClaimsDesk Modernization",
+  "quality": {
+    "findings": [
+      {
+        "title": "Release window unconfirmed",
+        "id": "Q-CL-01"
+      }
+    ],
+    "status": "review-required"
+  },
+  "dependencies": [
+    {
+      "title": "Release window confirmation",
+      "id": "DEP-CL-01"
+    }
+  ],
+  "id": "DEAL_CLAIMS_MOCK"
+}

@@ -1,0 +1,1007 @@
+{
+  "schemaVersion": "1.0-mock",
+  "generatedAt": "2026-10-02T17:38:53.803Z",
+  "mode": "mock",
+  "sourcePackage": {
+    "name": "Unified Supply Chain Analytics",
+    "mode": "built-in-sample"
+  },
+  "maturity": {
+    "label": "Review Required",
+    "score": 59,
+    "blockers": [
+      [
+        "B-01",
+        "Event coverage unconfirmed",
+        "ERP、CRM 与承运商事件清单未冻结。"
+      ],
+      [
+        "B-02",
+        "Migration scope open",
+        "历史数据迁移窗口和保留策略需确认。"
+      ]
+    ]
+  },
+  "nodes": [
+    {
+      "id": "N1",
+      "title": "Supply · 确认 API 与数据边界",
+      "category": "Discovery",
+      "model": "flexible-talent",
+      "confidence": "high",
+      "wave": 1,
+      "duration": 3,
+      "deps": [],
+      "sourceIds": [
+        "SUPPLY-REQ-01",
+        "SUPPLY-ARC-01"
+      ],
+      "readiness": "blocked",
+      "provenance": "AI-recommended",
+      "objective": "冻结身份、患者资料与事件接口，记录 PHI 数据边界。",
+      "rationale": [
+        "范围明确，适合一名资深集成工程师快速完成。",
+        "需要直接与现有交付团队对接，不需要竞赛探索。"
+      ],
+      "acceptance": "接口字段、错误码、访问角色和审计事件均有版本化契约。",
+      "alternatives": [
+        "challenge"
+      ],
+      "executionPackage": {
+        "nodeId": "N1",
+        "operatingModel": "flexible-talent",
+        "readiness": "blocked",
+        "sourceIds": [
+          "SUPPLY-REQ-01",
+          "SUPPLY-ARC-01"
+        ],
+        "dependencies": [],
+        "provenance": "AI-recommended",
+        "kind": "flexible-talent",
+        "requiredRoles": [
+          {
+            "role": "Solution analyst",
+            "seniority": "Senior",
+            "skills": [
+              "Requirements analysis",
+              "Systems design",
+              "Technical writing"
+            ]
+          }
+        ],
+        "duration": {
+          "value": 3,
+          "unit": "person-days"
+        },
+        "responsibilities": [
+          "冻结身份、患者资料与事件接口，记录 PHI 数据边界。",
+          "接口字段、错误码、访问角色和审计事件均有版本化契约。"
+        ],
+        "startDependencies": [],
+        "requiredAccessAndEnvironment": [
+          "Approved repository and test environment",
+          "Least-privilege source access"
+        ]
+      },
+      "operatingModel": {
+        "primary": "flexible-talent",
+        "alternatives": [
+          "challenge"
+        ],
+        "confidence": "high",
+        "rationale": [
+          "范围明确，适合一名资深集成工程师快速完成。",
+          "需要直接与现有交付团队对接，不需要竞赛探索。"
+        ]
+      },
+      "inputs": [],
+      "deliverables": [],
+      "risks": [],
+      "assumptions": [],
+      "effort": {
+        "minimum": 3,
+        "maximum": 3,
+        "unit": "person-days"
+      }
+    },
+    {
+      "id": "N2",
+      "title": "Supply · 文档摄取与字段提取",
+      "category": "AI implementation",
+      "model": "challenge",
+      "confidence": "medium",
+      "wave": 2,
+      "duration": 4,
+      "deps": [
+        "N1"
+      ],
+      "sourceIds": [
+        "SUPPLY-CAP-01",
+        "SUPPLY-AI-01"
+      ],
+      "readiness": "ready",
+      "provenance": "AI-recommended",
+      "objective": "构建可评估的文档解析与信息提取组件。",
+      "rationale": [
+        "多个解析策略可并行探索，结果能用固定数据集评估。",
+        "输入和验收指标可独立打包，适合开放参与。"
+      ],
+      "acceptance": "在提供的匿名样本上达到约定字段覆盖率，并输出可复现评测报告。",
+      "alternatives": [
+        "flexible-talent"
+      ],
+      "executionPackage": {
+        "nodeId": "N2",
+        "operatingModel": "challenge",
+        "readiness": "ready",
+        "sourceIds": [
+          "SUPPLY-CAP-01",
+          "SUPPLY-AI-01"
+        ],
+        "dependencies": [
+          "N1"
+        ],
+        "provenance": "AI-recommended",
+        "kind": "challenge",
+        "challengeObjective": "构建可评估的文档解析与信息提取组件。",
+        "businessAndTechnicalContext": "Supply · 文档摄取与字段提取 is grounded in SUPPLY-CAP-01, SUPPLY-AI-01.",
+        "deliverables": [
+          "Supply · 文档摄取与字段提取 implementation or evaluation artifact",
+          "Reproducible result package"
+        ],
+        "evaluationCriteria": [
+          "在提供的匿名样本上达到约定字段覆盖率，并输出可复现评测报告。",
+          "Traceable evidence for each source reference",
+          "Automated checks pass"
+        ],
+        "acceptanceConditions": [
+          "在提供的匿名样本上达到约定字段覆盖率，并输出可复现评测报告。"
+        ],
+        "inputAssets": [
+          "SUPPLY-CAP-01",
+          "SUPPLY-AI-01"
+        ],
+        "requiredTechnologiesOrSkills": [
+          "AI implementation",
+          "Evaluation design",
+          "Python/JSON"
+        ],
+        "confidentialityLimitations": [
+          "Use sanitized input assets only",
+          "No production credentials"
+        ],
+        "expectedReviewProcess": [
+          "Automated quality checks",
+          "Human review against acceptance criteria"
+        ]
+      },
+      "operatingModel": {
+        "primary": "challenge",
+        "alternatives": [
+          "flexible-talent"
+        ],
+        "confidence": "medium",
+        "rationale": [
+          "多个解析策略可并行探索，结果能用固定数据集评估。",
+          "输入和验收指标可独立打包，适合开放参与。"
+        ]
+      },
+      "inputs": [],
+      "deliverables": [],
+      "risks": [],
+      "assumptions": [],
+      "effort": {
+        "minimum": 4,
+        "maximum": 4,
+        "unit": "person-days"
+      }
+    },
+    {
+      "id": "N3",
+      "title": "Supply · 知识库与检索评估",
+      "category": "AI / data",
+      "model": "challenge",
+      "confidence": "medium",
+      "wave": 2,
+      "duration": 3,
+      "deps": [
+        "N1"
+      ],
+      "sourceIds": [
+        "SUPPLY-AI-02",
+        "SUPPLY-DATA-01"
+      ],
+      "readiness": "review-required",
+      "provenance": "AI-recommended",
+      "objective": "比较检索、切分和引用策略，产出可审阅的评测包。",
+      "rationale": [
+        "多种方法与模型对比有明显价值。",
+        "可以隔离敏感生产数据，只开放脱敏资料。"
+      ],
+      "acceptance": "至少两种策略在固定问题集上可比较，并保留引用证据。",
+      "alternatives": [
+        "flexible-talent"
+      ],
+      "executionPackage": {
+        "nodeId": "N3",
+        "operatingModel": "challenge",
+        "readiness": "review-required",
+        "sourceIds": [
+          "SUPPLY-AI-02",
+          "SUPPLY-DATA-01"
+        ],
+        "dependencies": [
+          "N1"
+        ],
+        "provenance": "AI-recommended",
+        "kind": "challenge",
+        "challengeObjective": "比较检索、切分和引用策略，产出可审阅的评测包。",
+        "businessAndTechnicalContext": "Supply · 知识库与检索评估 is grounded in SUPPLY-AI-02, SUPPLY-DATA-01.",
+        "deliverables": [
+          "Supply · 知识库与检索评估 implementation or evaluation artifact",
+          "Reproducible result package"
+        ],
+        "evaluationCriteria": [
+          "至少两种策略在固定问题集上可比较，并保留引用证据。",
+          "Traceable evidence for each source reference",
+          "Automated checks pass"
+        ],
+        "acceptanceConditions": [
+          "至少两种策略在固定问题集上可比较，并保留引用证据。"
+        ],
+        "inputAssets": [
+          "SUPPLY-AI-02",
+          "SUPPLY-DATA-01"
+        ],
+        "requiredTechnologiesOrSkills": [
+          "Data integration",
+          "Data quality",
+          "JSON/API"
+        ],
+        "confidentialityLimitations": [
+          "Use sanitized input assets only",
+          "No production credentials"
+        ],
+        "expectedReviewProcess": [
+          "Automated quality checks",
+          "Human review against acceptance criteria"
+        ]
+      },
+      "operatingModel": {
+        "primary": "challenge",
+        "alternatives": [
+          "flexible-talent"
+        ],
+        "confidence": "medium",
+        "rationale": [
+          "多种方法与模型对比有明显价值。",
+          "可以隔离敏感生产数据，只开放脱敏资料。"
+        ]
+      },
+      "inputs": [],
+      "deliverables": [],
+      "risks": [],
+      "assumptions": [],
+      "effort": {
+        "minimum": 3,
+        "maximum": 3,
+        "unit": "person-days"
+      }
+    },
+    {
+      "id": "N4",
+      "title": "Supply · 安全与人工复核控制",
+      "category": "Security",
+      "model": "private-pod",
+      "confidence": "high",
+      "wave": 3,
+      "duration": 3,
+      "deps": [
+        "N2",
+        "N3"
+      ],
+      "sourceIds": [
+        "SUPPLY-NFR-02",
+        "SUPPLY-RISK-01"
+      ],
+      "readiness": "review-required",
+      "provenance": "AI-recommended",
+      "objective": "实现 PHI 访问控制、人工复核队列和审计闭环。",
+      "rationale": [
+        "安全、AI 和业务流程强耦合，需要持续技术领导。",
+        "受监管数据要求受控团队与限制访问。"
+      ],
+      "acceptance": "高风险结果阻断自动回复；复核、审计和告警可端到端演示。",
+      "alternatives": [
+        "flexible-talent"
+      ],
+      "executionPackage": {
+        "nodeId": "N4",
+        "operatingModel": "private-pod",
+        "readiness": "review-required",
+        "sourceIds": [
+          "SUPPLY-NFR-02",
+          "SUPPLY-RISK-01"
+        ],
+        "dependencies": [
+          "N2",
+          "N3"
+        ],
+        "provenance": "AI-recommended",
+        "kind": "private-pod",
+        "podObjective": "实现 PHI 访问控制、人工复核队列和审计闭环。",
+        "requiredRoles": [
+          {
+            "role": "Technical lead",
+            "seniority": "Lead",
+            "skills": [
+              "Systems design",
+              "Delivery coordination"
+            ]
+          },
+          {
+            "role": "Security engineer",
+            "seniority": "Senior",
+            "skills": [
+              "Security engineering",
+              "Access control",
+              "Audit logging"
+            ]
+          }
+        ],
+        "technicalLeadershipNeeds": [
+          "Own interfaces and sequencing",
+          "Resolve cross-component risks"
+        ],
+        "componentOwnership": [
+          "Supply · 安全与人工复核控制"
+        ],
+        "deliveryResponsibilities": [
+          "实现 PHI 访问控制、人工复核队列和审计闭环。",
+          "高风险结果阻断自动回复；复核、审计和告警可端到端演示。"
+        ],
+        "securityAndAccessRequirements": [
+          "Vetted team access",
+          "Least-privilege environment",
+          "Audit trail for sensitive work"
+        ],
+        "coordinationDependencies": [
+          "N2",
+          "N3"
+        ],
+        "expectedDuration": {
+          "value": 3,
+          "unit": "person-days"
+        },
+        "definitionOfCompletion": "高风险结果阻断自动回复；复核、审计和告警可端到端演示。"
+      },
+      "operatingModel": {
+        "primary": "private-pod",
+        "alternatives": [
+          "flexible-talent"
+        ],
+        "confidence": "high",
+        "rationale": [
+          "安全、AI 和业务流程强耦合，需要持续技术领导。",
+          "受监管数据要求受控团队与限制访问。"
+        ]
+      },
+      "inputs": [],
+      "deliverables": [],
+      "risks": [],
+      "assumptions": [],
+      "effort": {
+        "minimum": 3,
+        "maximum": 3,
+        "unit": "person-days"
+      }
+    },
+    {
+      "id": "N5",
+      "title": "Supply · 对话体验与可用性验证",
+      "category": "UX / testing",
+      "model": "challenge",
+      "confidence": "high",
+      "wave": 3,
+      "duration": 2,
+      "deps": [
+        "N2"
+      ],
+      "sourceIds": [
+        "SUPPLY-REQ-03",
+        "SUPPLY-NFR-03"
+      ],
+      "readiness": "ready",
+      "provenance": "AI-recommended",
+      "objective": "验证 intake 对话流程、错误恢复和可访问性。",
+      "rationale": [
+        "体验方案可独立评审，多种交互探索会增加价值。",
+        "验收可由脚本和可用性量表客观判断。"
+      ],
+      "acceptance": "完成关键旅程走查，达到可访问性清单和人工评审门槛。",
+      "alternatives": [
+        "flexible-talent"
+      ],
+      "executionPackage": {
+        "nodeId": "N5",
+        "operatingModel": "challenge",
+        "readiness": "ready",
+        "sourceIds": [
+          "SUPPLY-REQ-03",
+          "SUPPLY-NFR-03"
+        ],
+        "dependencies": [
+          "N2"
+        ],
+        "provenance": "AI-recommended",
+        "kind": "challenge",
+        "challengeObjective": "验证 intake 对话流程、错误恢复和可访问性。",
+        "businessAndTechnicalContext": "Supply · 对话体验与可用性验证 is grounded in SUPPLY-REQ-03, SUPPLY-NFR-03.",
+        "deliverables": [
+          "Supply · 对话体验与可用性验证 implementation or evaluation artifact",
+          "Reproducible result package"
+        ],
+        "evaluationCriteria": [
+          "完成关键旅程走查，达到可访问性清单和人工评审门槛。",
+          "Traceable evidence for each source reference",
+          "Automated checks pass"
+        ],
+        "acceptanceConditions": [
+          "完成关键旅程走查，达到可访问性清单和人工评审门槛。"
+        ],
+        "inputAssets": [
+          "SUPPLY-REQ-03",
+          "SUPPLY-NFR-03"
+        ],
+        "requiredTechnologiesOrSkills": [
+          "UX/UI design",
+          "Accessibility testing",
+          "Usability evaluation"
+        ],
+        "confidentialityLimitations": [
+          "Use sanitized input assets only",
+          "No production credentials"
+        ],
+        "expectedReviewProcess": [
+          "Automated quality checks",
+          "Human review against acceptance criteria"
+        ]
+      },
+      "operatingModel": {
+        "primary": "challenge",
+        "alternatives": [
+          "flexible-talent"
+        ],
+        "confidence": "high",
+        "rationale": [
+          "体验方案可独立评审，多种交互探索会增加价值。",
+          "验收可由脚本和可用性量表客观判断。"
+        ]
+      },
+      "inputs": [],
+      "deliverables": [],
+      "risks": [],
+      "assumptions": [],
+      "effort": {
+        "minimum": 2,
+        "maximum": 2,
+        "unit": "person-days"
+      }
+    },
+    {
+      "id": "N6",
+      "title": "Supply · 受控试点交付",
+      "category": "Deployment",
+      "model": "private-pod",
+      "confidence": "high",
+      "wave": 4,
+      "duration": 3,
+      "deps": [
+        "N4",
+        "N5"
+      ],
+      "sourceIds": [
+        "SUPPLY-ARC-02",
+        "SUPPLY-REL-01"
+      ],
+      "readiness": "review-required",
+      "provenance": "AI-recommended",
+      "objective": "将组件集成至受控环境，完成试点、监控与回滚演练。",
+      "rationale": [
+        "涉及前后端、AI、安全和发布协作，需持续协调。",
+        "试点环境有受限数据与发布责任，不适合公开竞赛。"
+      ],
+      "acceptance": "试点指标、回滚路径、监控告警和交接文档经责任人签字。",
+      "alternatives": [
+        "flexible-talent"
+      ],
+      "executionPackage": {
+        "nodeId": "N6",
+        "operatingModel": "private-pod",
+        "readiness": "review-required",
+        "sourceIds": [
+          "SUPPLY-ARC-02",
+          "SUPPLY-REL-01"
+        ],
+        "dependencies": [
+          "N4",
+          "N5"
+        ],
+        "provenance": "AI-recommended",
+        "kind": "private-pod",
+        "podObjective": "将组件集成至受控环境，完成试点、监控与回滚演练。",
+        "requiredRoles": [
+          {
+            "role": "Technical lead",
+            "seniority": "Lead",
+            "skills": [
+              "Systems design",
+              "Delivery coordination"
+            ]
+          },
+          {
+            "role": "Cloud engineer",
+            "seniority": "Senior",
+            "skills": [
+              "Cloud infrastructure",
+              "Release engineering",
+              "Observability"
+            ]
+          }
+        ],
+        "technicalLeadershipNeeds": [
+          "Own interfaces and sequencing",
+          "Resolve cross-component risks"
+        ],
+        "componentOwnership": [
+          "Supply · 受控试点交付"
+        ],
+        "deliveryResponsibilities": [
+          "将组件集成至受控环境，完成试点、监控与回滚演练。",
+          "试点指标、回滚路径、监控告警和交接文档经责任人签字。"
+        ],
+        "securityAndAccessRequirements": [
+          "Vetted team access",
+          "Least-privilege environment",
+          "Audit trail for sensitive work"
+        ],
+        "coordinationDependencies": [
+          "N4",
+          "N5"
+        ],
+        "expectedDuration": {
+          "value": 3,
+          "unit": "person-days"
+        },
+        "definitionOfCompletion": "试点指标、回滚路径、监控告警和交接文档经责任人签字。"
+      },
+      "operatingModel": {
+        "primary": "private-pod",
+        "alternatives": [
+          "flexible-talent"
+        ],
+        "confidence": "high",
+        "rationale": [
+          "涉及前后端、AI、安全和发布协作，需持续协调。",
+          "试点环境有受限数据与发布责任，不适合公开竞赛。"
+        ]
+      },
+      "inputs": [],
+      "deliverables": [],
+      "risks": [],
+      "assumptions": [],
+      "effort": {
+        "minimum": 3,
+        "maximum": 3,
+        "unit": "person-days"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "EDGE_001",
+      "source": "N1",
+      "target": "N2",
+      "type": "blocking-dependency",
+      "rationale": "N2 requires the output from N1.",
+      "sourceIds": [
+        "SUPPLY-CAP-01",
+        "SUPPLY-AI-01"
+      ],
+      "blocking": true,
+      "requiredInput": "构建可评估的文档解析与信息提取组件。"
+    },
+    {
+      "id": "EDGE_002",
+      "source": "N1",
+      "target": "N3",
+      "type": "blocking-dependency",
+      "rationale": "N3 requires the output from N1.",
+      "sourceIds": [
+        "SUPPLY-AI-02",
+        "SUPPLY-DATA-01"
+      ],
+      "blocking": true,
+      "requiredInput": "比较检索、切分和引用策略，产出可审阅的评测包。"
+    },
+    {
+      "id": "EDGE_003",
+      "source": "N2",
+      "target": "N4",
+      "type": "blocking-dependency",
+      "rationale": "N4 requires the output from N2.",
+      "sourceIds": [
+        "SUPPLY-NFR-02",
+        "SUPPLY-RISK-01"
+      ],
+      "blocking": true,
+      "requiredInput": "实现 PHI 访问控制、人工复核队列和审计闭环。"
+    },
+    {
+      "id": "EDGE_004",
+      "source": "N3",
+      "target": "N4",
+      "type": "blocking-dependency",
+      "rationale": "N4 requires the output from N3.",
+      "sourceIds": [
+        "SUPPLY-NFR-02",
+        "SUPPLY-RISK-01"
+      ],
+      "blocking": true,
+      "requiredInput": "实现 PHI 访问控制、人工复核队列和审计闭环。"
+    },
+    {
+      "id": "EDGE_005",
+      "source": "N2",
+      "target": "N5",
+      "type": "blocking-dependency",
+      "rationale": "N5 requires the output from N2.",
+      "sourceIds": [
+        "SUPPLY-REQ-03",
+        "SUPPLY-NFR-03"
+      ],
+      "blocking": true,
+      "requiredInput": "验证 intake 对话流程、错误恢复和可访问性。"
+    },
+    {
+      "id": "EDGE_006",
+      "source": "N4",
+      "target": "N6",
+      "type": "blocking-dependency",
+      "rationale": "N6 requires the output from N4.",
+      "sourceIds": [
+        "SUPPLY-ARC-02",
+        "SUPPLY-REL-01"
+      ],
+      "blocking": true,
+      "requiredInput": "将组件集成至受控环境，完成试点、监控与回滚演练。"
+    },
+    {
+      "id": "EDGE_007",
+      "source": "N5",
+      "target": "N6",
+      "type": "blocking-dependency",
+      "rationale": "N6 requires the output from N5.",
+      "sourceIds": [
+        "SUPPLY-ARC-02",
+        "SUPPLY-REL-01"
+      ],
+      "blocking": true,
+      "requiredInput": "将组件集成至受控环境，完成试点、监控与回滚演练。"
+    }
+  ],
+  "waves": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "operatingModelSummary": {
+    "flexible-talent": 1,
+    "challenge": 3,
+    "private-pod": 2
+  },
+  "executionPackages": [
+    {
+      "nodeId": "N1",
+      "operatingModel": "flexible-talent",
+      "readiness": "blocked",
+      "sourceIds": [
+        "SUPPLY-REQ-01",
+        "SUPPLY-ARC-01"
+      ],
+      "dependencies": [],
+      "provenance": "AI-recommended",
+      "kind": "flexible-talent",
+      "requiredRoles": [
+        {
+          "role": "Solution analyst",
+          "seniority": "Senior",
+          "skills": [
+            "Requirements analysis",
+            "Systems design",
+            "Technical writing"
+          ]
+        }
+      ],
+      "duration": {
+        "value": 3,
+        "unit": "person-days"
+      },
+      "responsibilities": [
+        "冻结身份、患者资料与事件接口，记录 PHI 数据边界。",
+        "接口字段、错误码、访问角色和审计事件均有版本化契约。"
+      ],
+      "startDependencies": [],
+      "requiredAccessAndEnvironment": [
+        "Approved repository and test environment",
+        "Least-privilege source access"
+      ]
+    },
+    {
+      "nodeId": "N2",
+      "operatingModel": "challenge",
+      "readiness": "ready",
+      "sourceIds": [
+        "SUPPLY-CAP-01",
+        "SUPPLY-AI-01"
+      ],
+      "dependencies": [
+        "N1"
+      ],
+      "provenance": "AI-recommended",
+      "kind": "challenge",
+      "challengeObjective": "构建可评估的文档解析与信息提取组件。",
+      "businessAndTechnicalContext": "Supply · 文档摄取与字段提取 is grounded in SUPPLY-CAP-01, SUPPLY-AI-01.",
+      "deliverables": [
+        "Supply · 文档摄取与字段提取 implementation or evaluation artifact",
+        "Reproducible result package"
+      ],
+      "evaluationCriteria": [
+        "在提供的匿名样本上达到约定字段覆盖率，并输出可复现评测报告。",
+        "Traceable evidence for each source reference",
+        "Automated checks pass"
+      ],
+      "acceptanceConditions": [
+        "在提供的匿名样本上达到约定字段覆盖率，并输出可复现评测报告。"
+      ],
+      "inputAssets": [
+        "SUPPLY-CAP-01",
+        "SUPPLY-AI-01"
+      ],
+      "requiredTechnologiesOrSkills": [
+        "AI implementation",
+        "Evaluation design",
+        "Python/JSON"
+      ],
+      "confidentialityLimitations": [
+        "Use sanitized input assets only",
+        "No production credentials"
+      ],
+      "expectedReviewProcess": [
+        "Automated quality checks",
+        "Human review against acceptance criteria"
+      ]
+    },
+    {
+      "nodeId": "N3",
+      "operatingModel": "challenge",
+      "readiness": "review-required",
+      "sourceIds": [
+        "SUPPLY-AI-02",
+        "SUPPLY-DATA-01"
+      ],
+      "dependencies": [
+        "N1"
+      ],
+      "provenance": "AI-recommended",
+      "kind": "challenge",
+      "challengeObjective": "比较检索、切分和引用策略，产出可审阅的评测包。",
+      "businessAndTechnicalContext": "Supply · 知识库与检索评估 is grounded in SUPPLY-AI-02, SUPPLY-DATA-01.",
+      "deliverables": [
+        "Supply · 知识库与检索评估 implementation or evaluation artifact",
+        "Reproducible result package"
+      ],
+      "evaluationCriteria": [
+        "至少两种策略在固定问题集上可比较，并保留引用证据。",
+        "Traceable evidence for each source reference",
+        "Automated checks pass"
+      ],
+      "acceptanceConditions": [
+        "至少两种策略在固定问题集上可比较，并保留引用证据。"
+      ],
+      "inputAssets": [
+        "SUPPLY-AI-02",
+        "SUPPLY-DATA-01"
+      ],
+      "requiredTechnologiesOrSkills": [
+        "Data integration",
+        "Data quality",
+        "JSON/API"
+      ],
+      "confidentialityLimitations": [
+        "Use sanitized input assets only",
+        "No production credentials"
+      ],
+      "expectedReviewProcess": [
+        "Automated quality checks",
+        "Human review against acceptance criteria"
+      ]
+    },
+    {
+      "nodeId": "N4",
+      "operatingModel": "private-pod",
+      "readiness": "review-required",
+      "sourceIds": [
+        "SUPPLY-NFR-02",
+        "SUPPLY-RISK-01"
+      ],
+      "dependencies": [
+        "N2",
+        "N3"
+      ],
+      "provenance": "AI-recommended",
+      "kind": "private-pod",
+      "podObjective": "实现 PHI 访问控制、人工复核队列和审计闭环。",
+      "requiredRoles": [
+        {
+          "role": "Technical lead",
+          "seniority": "Lead",
+          "skills": [
+            "Systems design",
+            "Delivery coordination"
+          ]
+        },
+        {
+          "role": "Security engineer",
+          "seniority": "Senior",
+          "skills": [
+            "Security engineering",
+            "Access control",
+            "Audit logging"
+          ]
+        }
+      ],
+      "technicalLeadershipNeeds": [
+        "Own interfaces and sequencing",
+        "Resolve cross-component risks"
+      ],
+      "componentOwnership": [
+        "Supply · 安全与人工复核控制"
+      ],
+      "deliveryResponsibilities": [
+        "实现 PHI 访问控制、人工复核队列和审计闭环。",
+        "高风险结果阻断自动回复；复核、审计和告警可端到端演示。"
+      ],
+      "securityAndAccessRequirements": [
+        "Vetted team access",
+        "Least-privilege environment",
+        "Audit trail for sensitive work"
+      ],
+      "coordinationDependencies": [
+        "N2",
+        "N3"
+      ],
+      "expectedDuration": {
+        "value": 3,
+        "unit": "person-days"
+      },
+      "definitionOfCompletion": "高风险结果阻断自动回复；复核、审计和告警可端到端演示。"
+    },
+    {
+      "nodeId": "N5",
+      "operatingModel": "challenge",
+      "readiness": "ready",
+      "sourceIds": [
+        "SUPPLY-REQ-03",
+        "SUPPLY-NFR-03"
+      ],
+      "dependencies": [
+        "N2"
+      ],
+      "provenance": "AI-recommended",
+      "kind": "challenge",
+      "challengeObjective": "验证 intake 对话流程、错误恢复和可访问性。",
+      "businessAndTechnicalContext": "Supply · 对话体验与可用性验证 is grounded in SUPPLY-REQ-03, SUPPLY-NFR-03.",
+      "deliverables": [
+        "Supply · 对话体验与可用性验证 implementation or evaluation artifact",
+        "Reproducible result package"
+      ],
+      "evaluationCriteria": [
+        "完成关键旅程走查，达到可访问性清单和人工评审门槛。",
+        "Traceable evidence for each source reference",
+        "Automated checks pass"
+      ],
+      "acceptanceConditions": [
+        "完成关键旅程走查，达到可访问性清单和人工评审门槛。"
+      ],
+      "inputAssets": [
+        "SUPPLY-REQ-03",
+        "SUPPLY-NFR-03"
+      ],
+      "requiredTechnologiesOrSkills": [
+        "UX/UI design",
+        "Accessibility testing",
+        "Usability evaluation"
+      ],
+      "confidentialityLimitations": [
+        "Use sanitized input assets only",
+        "No production credentials"
+      ],
+      "expectedReviewProcess": [
+        "Automated quality checks",
+        "Human review against acceptance criteria"
+      ]
+    },
+    {
+      "nodeId": "N6",
+      "operatingModel": "private-pod",
+      "readiness": "review-required",
+      "sourceIds": [
+        "SUPPLY-ARC-02",
+        "SUPPLY-REL-01"
+      ],
+      "dependencies": [
+        "N4",
+        "N5"
+      ],
+      "provenance": "AI-recommended",
+      "kind": "private-pod",
+      "podObjective": "将组件集成至受控环境，完成试点、监控与回滚演练。",
+      "requiredRoles": [
+        {
+          "role": "Technical lead",
+          "seniority": "Lead",
+          "skills": [
+            "Systems design",
+            "Delivery coordination"
+          ]
+        },
+        {
+          "role": "Cloud engineer",
+          "seniority": "Senior",
+          "skills": [
+            "Cloud infrastructure",
+            "Release engineering",
+            "Observability"
+          ]
+        }
+      ],
+      "technicalLeadershipNeeds": [
+        "Own interfaces and sequencing",
+        "Resolve cross-component risks"
+      ],
+      "componentOwnership": [
+        "Supply · 受控试点交付"
+      ],
+      "deliveryResponsibilities": [
+        "将组件集成至受控环境，完成试点、监控与回滚演练。",
+        "试点指标、回滚路径、监控告警和交接文档经责任人签字。"
+      ],
+      "securityAndAccessRequirements": [
+        "Vetted team access",
+        "Least-privilege environment",
+        "Audit trail for sensitive work"
+      ],
+      "coordinationDependencies": [
+        "N4",
+        "N5"
+      ],
+      "expectedDuration": {
+        "value": 3,
+        "unit": "person-days"
+      },
+      "definitionOfCompletion": "试点指标、回滚路径、监控告警和交接文档经责任人签字。"
+    }
+  ],
+  "changeImpact": null,
+  "overrideHistory": [],
+  "qualityFindings": {
+    "dangling": [],
+    "duplicates": [],
+    "selfDependencies": [],
+    "orphans": []
+  },
+  "qualityStatus": "review-required",
+  "qualityGate": "pass-with-review"
+}

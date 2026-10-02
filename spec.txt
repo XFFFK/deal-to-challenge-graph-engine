@@ -1,0 +1,1296 @@
+The **AI Deal Scoping Assistant** converts customer requirements into a reviewed solution package containing: 
+
+* Approved requirements and functional scope 
+* Cloud architecture 
+* Data, integration, and AI strategies 
+* Delivery workstreams and estimates 
+* Risks, assumptions, dependencies, and open questions 
+* Requirement traceability and quality findings 
+
+However, a reviewed solution package is not yet an execution plan. 
+
+Delivery teams must still determine: 
+
+* What work needs to be completed 
+* How the work should be divided 
+* Which activities depend on each other 
+* What can run in parallel 
+* Which Topcoder operating model is best suited for each unit of work 
+* What information is needed before execution can begin 
+
+This challenge is to build a browser-accessible **Deal-to-Challenge Graph Engine** that transforms the supplied deal-scoping JSON packages into an execution-ready Directed Acyclic Graph, or DAG, of connected delivery nodes. 
+
+Each node must represent a meaningful unit of work and be classified into one of Topcoder’s three operating models: 
+
+1. **Flexible Talent** 
+2. **Challenge** 
+3. **Private Pod** 
+
+A deal may use one operating model throughout or combine different operating models across the graph. 
+
+The application must preserve traceability from the imported requirements and architecture to every generated node. 
+
+The final product should feel like an intelligent deal-to-execution compiler, not a generic task generator, project board, static flowchart, or single AI prompt that produces a list of challenges. 
+
+ 
+## Relationship to the AI Deal Scoping Assistant 
+
+The **AI Deal Scoping Assistant** answers: 
+
+What should be built, how should it be designed, and what effort may be required? 
+
+The **Deal-to-Challenge Graph Engine** answers: 
+
+How should the approved solution be divided, sequenced, and delivered using Topcoder’s operating models? 
+
+This process begins after the deal-scoping package is available. 
+
+The Deal-to-Challenge Graph Engine should be implemented as a separate application or process for this challenge. Integration with the AI Deal Scoping Assistant or the wider Topcoder platform may be considered in the future but is not required here. 
+
+The imported deal package may contain: 
+
+* Reviewed requirements 
+* Functional capabilities 
+* Architecture components and flows 
+* Data domains and integrations 
+* AI use cases 
+* Delivery phases and estimates 
+* Risks, assumptions, dependencies, gaps, and questions 
+* Quality findings 
+* Traceability relationships 
+
+The engine must use and preserve these relationships when generating the delivery graph. 
+
+ 
+## Challenge Goal 
+
+Build an AI-powered delivery-compilation experience that enables users to: 
+
+* Import and validate the supplied deal-scoping JSON packages 
+* Normalize the imported package into a shared execution model 
+* Review blockers, assumptions, gaps, and open questions 
+* Assess whether the package is ready for execution planning 
+* Divide the solution into meaningful delivery nodes 
+* Classify each node as Flexible Talent, Challenge, or Private Pod 
+* Explain why each operating model was recommended 
+* Build a dependency-aware DAG 
+* Identify parallel work, execution waves, and the critical path 
+* Generate an execution package appropriate to each node’s operating model 
+* Trace every node to imported requirements and architecture components 
+* Modify nodes, operating models, or dependencies and review the impact 
+* Validate the graph before operational handoff 
+* Export the graph and model-specific execution packages 
+
+The generated graph is an internal planning aid. The application must not automatically recruit talent, launch a challenge, build a private pod, approve funding, or commit delivery timelines. 
+
+ 
+## Challenge Type 
+
+**AI Exponential League Rapid Application Development Challenge** 
+
+This challenge combines: 
+
+* UX and UI design 
+* Structured JSON ingestion 
+* Source-package normalization 
+* AI-assisted delivery decomposition 
+* Topcoder operating-model classification 
+* DAG generation and analysis 
+* Model-specific execution-package generation 
+* Traceability 
+* Change-impact analysis 
+* Quality validation 
+* Structured export 
+
+**Participants may use:** 
+
+* A single AI service 
+* Multiple specialized AI agents 
+* Deterministic classification rules 
+* Workflow orchestration 
+* A hybrid AI and rules-based approach 
+* A custom implementation 
+
+Framework choice will not determine the score. 
+
+ 
+## Official Input Packages 
+
+The challenge repository will include four sanitized deal-scoping JSON packages: 
+
+1. claimsdesk-modernization.json 
+2. clinical-intake-and-patient-support-assistant.json 
+3. member-experience-modernisation-early-discovery.json 
+4. unified-supply-chain-analytics.json 
+
+The application must import all four files directly. Evaluators must not be required to modify or manually convert the files. 
+
+**1. ClaimsDesk Modernization** 
+
+A mature enterprise-modernization package containing: 
+
+* Application modernization 
+* Enterprise integrations 
+* Cloud architecture 
+* Data and document migration 
+* Security and compliance requirements 
+* AI-assisted capabilities 
+* Phased delivery 
+* Open integration and release decisions 
+
+The generated graph may combine: 
+
+* Private Pod nodes for coordinated modernization work 
+* Challenge nodes for bounded design, testing, or exploratory work 
+* Flexible Talent nodes for specific specialist requirements 
+
+**2. Clinical Intake and Patient Support Assistant** 
+
+An AI-enabled regulated solution containing: 
+
+* Document ingestion 
+* AI-assisted information extraction 
+* Knowledge-grounded assistance 
+* Mandatory human validation 
+* Healthcare integrations 
+* Privacy, safety, and security controls 
+* AI, deterministic, and human-decision boundaries 
+* Review-required findings 
+
+The engine should account for regulated data, restricted access, technical coordination, human review, and AI-safety requirements when selecting operating models. 
+
+**3. Member Experience Modernisation, Early Discovery** 
+
+An early-discovery package containing: 
+
+* Directional business requirements 
+* Undefined AI functionality 
+* Unknown systems and integrations 
+* Missing non-functional requirements 
+* Missing volume, timeline, compliance, and environment information 
+* Unresolved questions and assumptions 
+* Low-confidence estimates 
+
+The engine should prioritize discovery and clarification work. Incomplete implementation nodes must remain blocked or review-required. 
+
+**4. Unified Supply Chain Analytics** 
+
+A data and integration-heavy package containing: 
+
+* ERP, CRM, warehouse, carrier, and identity integrations 
+* API, event, batch, and file-based integration patterns 
+* Analytics and reporting architecture 
+* Inventory reconciliation 
+* Data quality and lineage 
+* Stockout forecasting 
+* Security, privacy, retention, and audit requirements 
+* Phased rollout 
+* Unconfirmed integration-event coverage and migration scope 
+
+The engine should evaluate: 
+
+* Which work needs coordinated Private Pod delivery 
+* Which bounded work can be delivered through a Challenge 
+* Which defined specialist requirements fit Flexible Talent 
+* Which unresolved decisions require discovery or review first 
+ 
+## Topcoder Operating Models 
+
+This specification provides only the context needed to classify work correctly. 
+
+Participants are not expected to implement Topcoder’s internal sales, staffing, talent-search, community-management, or delivery operations. 
+
+### 1. Flexible Talent 
+
+Use Flexible Talent when the work is best completed by one or more specific resources with clearly defined skills. 
+
+Flexible Talent is generally suitable when: 
+
+* Required skills and roles are already known 
+* The work can be assigned to specific individuals 
+* The client or delivery team will manage the work directly 
+* Competitive exploration is not required 
+* The need is primarily specialist expertise or additional capacity 
+* The work can fit within an existing delivery team 
+
+Examples include: 
+
+* Adding a frontend engineer to an existing product team 
+* Assigning a data engineer to a defined pipeline backlog 
+* Providing a cloud specialist for a focused configuration task 
+* Providing a QA engineer for an established test plan 
+* Assigning a technical expert for an assessment 
+
+A Flexible Talent node should describe: 
+
+* Required roles 
+* Required skills 
+* Seniority or experience 
+* Expected duration or capacity 
+* Responsibilities 
+* Start dependencies 
+* Required access and environment 
+
+### 2. Challenge 
+
+Use the Challenge model when the work benefits from open participation, multiple submissions, alternative approaches, competition, or community creativity. 
+
+A Challenge is generally suitable when: 
+
+* Multiple approaches or perspectives are valuable 
+* Deliverables can be evaluated using clear criteria 
+* The scope can be packaged independently 
+* Broader community participation adds value 
+* Participants do not need unrestricted access to sensitive information 
+* The expected result is measurable and reviewable 
+
+Examples include: 
+
+* UX concept exploration 
+* Data-science model development 
+* Computer-vision solution exploration 
+* Design work 
+* Algorithm or optimization work 
+* A clearly bounded application component 
+* Independent testing or quality work 
+
+A Challenge node should describe: 
+
+* Challenge objective 
+* Participant context 
+* Deliverables 
+* Evaluation criteria 
+* Acceptance conditions 
+* Input assets 
+* Required technologies or skills 
+* Dependencies 
+* Confidentiality limitations 
+* Expected review process 
+
+### 3. Private Pod 
+
+Use Private Pod when the work requires a coordinated, vetted team to own a complex or sensitive delivery area. 
+
+A Private Pod is generally suitable when: 
+
+* Multiple technical roles must work together 
+* Architecture and implementation are closely connected 
+* Continuous technical leadership is required 
+* Multiple components are strongly coupled 
+* The work requires restricted access 
+* Confidentiality or endpoint controls apply 
+* Sustained delivery ownership is required 
+
+Examples include: 
+
+* Delivering a multi-component enterprise integration 
+* Building a regulated AI workflow 
+* Implementing a cloud platform foundation 
+* Modernizing a tightly coupled application area 
+* Building a coordinated data platform 
+* Delivering work requiring architecture leadership and multiple engineers 
+
+A Private Pod node should describe: 
+
+* Pod objective 
+* Required roles and skills 
+* Technical-leadership requirement 
+* Component ownership 
+* Delivery responsibilities 
+* Security and access requirements 
+* Coordination dependencies 
+* Expected duration 
+* Definition of completion 
+ 
+## Operating-Model Classification Principles 
+
+Every executable DAG node must have one recommended primary operating model: 
+
+* flexible-talent 
+* challenge 
+* private-pod 
+
+The engine must not assume that every node should become a Challenge. 
+
+A deal may produce: 
+
+* A graph using one operating model 
+* A graph combining two operating models 
+* A mixed graph using all three operating models 
+
+The engine should consider: 
+
+* Scope clarity 
+* Required roles and team size 
+* Need for technical leadership 
+* Degree of collaboration 
+* Component coupling 
+* Suitability for competitive delivery 
+* Value of multiple approaches 
+* Security and confidentiality 
+* Data sensitivity 
+* Duration and continuity 
+* Client management capacity 
+* Acceptance measurability 
+* Need for broad community participation
+
+For each node, the engine should recommend the most suitable operating model and explain the reason in simple terms. 
+
+If the work does not fit cleanly into one operating model, the engine should: 
+
+* Recommend splitting the work into smaller nodes, or 
+* Define a clear handoff from one operating model to another 
+
+Each node should contain: 
+
+* Recommended primary operating model 
+* Classification rationale 
+* Classification confidence 
+* Alternative operating models, where applicable 
+* Source evidence supporting the decision 
+* User override history, where applicable 
+
+Users must be able to override the recommended operating model. The override and its rationale must be recorded as a user-reviewed decision. 
+
+ 
+## Grounding and Information Hierarchy 
+
+The engine must use the following information hierarchy. 
+
+**Primary Source** 
+
+* The imported deal-scoping JSON package. 
+
+**Secondary Source** 
+
+User-reviewed decisions, including: 
+
+* Node additions or removals 
+* Node splits or merges 
+* Dependency changes 
+* Operating-model overrides 
+* Approved assumptions 
+* Blocker resolution 
+
+**AI-Generated Recommendations** 
+
+AI may recommend: 
+
+* Delivery boundaries 
+* Node titles 
+* Dependencies 
+* Operating models 
+* Required skills and roles 
+* Acceptance conditions 
+* Risks 
+* Execution-package content 
+
+AI-generated recommendations must be clearly labelled and traceable. 
+
+**Deterministic Outputs** 
+
+Deterministic logic must calculate: 
+
+* Duplicate and dangling references 
+* Cycles and orphan nodes 
+* Coverage 
+* Execution waves 
+* Critical path 
+* Aggregated effort and duration 
+* Classification completeness 
+* Quality-gate status 
+* Operational handoff readiness 
+
+Where information is missing, the engine should create a discovery or clarification node rather than inventing requirements, contracts, security details, or acceptance conditions. 
+
+ 
+## Target Users 
+
+**1. Challenge and Engagement Managers** 
+
+Users converting reviewed deal scope into Topcoder-aligned execution plans. 
+
+**2. Delivery Managers** 
+
+Users reviewing sequencing, operating models, effort, blockers, waves, and the critical path. 
+
+**3. Solution Architects** 
+
+Users validating delivery boundaries against the approved architecture. 
+
+**4. Engineering Leads** 
+
+Users reviewing technical scope, interfaces, dependencies, and acceptance conditions. 
+
+**5. Talent and Community Operations** 
+
+Users reviewing role requirements and work packages aligned with the selected operating model. 
+
+ 
+## Core User Journey 
+
+1. Import a supplied deal-scoping package. 
+2. Review validation results and package maturity. 
+3. Review blockers, assumptions, gaps, and open questions. 
+4. Run AI-assisted delivery decomposition. 
+5. Review the generated execution nodes. 
+6. Review the recommended operating model for each node. 
+7. Edit nodes or override operating-model classifications. 
+8. Generate the dependency DAG. 
+9. Review execution waves and the critical path. 
+10. Review model-specific execution packages. 
+11. Modify a node, classification, or dependency. 
+12. Review the resulting graph impact. 
+13. Run the graph-quality gate. 
+14. Export the execution graph and packages. 
+ 
+## Functional Requirements 
+
+### 1. Deal Package Ingestion and Validation 
+
+The application must directly accept all four supplied JSON files. 
+
+The importer must extract applicable: 
+
+* Requirements 
+* Assumptions, gaps, questions, risks, and dependencies 
+* Capabilities, modules, and workstreams 
+* Architecture components and flows 
+* Data domains and integrations 
+* AI use cases 
+* Delivery estimates 
+* Quality findings 
+* Traceability links 
+
+The importer must validate: 
+
+* JSON structure 
+* Required sections and identifiers 
+* Duplicate and dangling identifiers 
+* Existing blockers and quality findings 
+* Unresolved questions and assumptions 
+* Stale sections 
+* Architecture or platform conflicts 
+* Missing estimation inputs 
+
+The original imported package must be preserved separately from the normalized execution model. 
+
+**Constraints** 
+
+1. Missing information must be reported and must not be silently invented. 
+2. Every imported item used by the graph must preserve its source identifier. 
+
+### 2. Source-Package Maturity Assessment 
+
+The engine must classify the imported package as: 
+
+* **Execution Candidate** 
+* **Review Required** 
+* **Discovery Required** 
+* **Blocked** 
+
+The assessment should consider: 
+
+* Existing quality status 
+* Critical questions and gaps 
+* Unconfirmed assumptions 
+* Missing contracts 
+* Missing architecture or security decisions 
+* Estimate confidence 
+* Stale sections 
+
+Incomplete packages should generate discovery, clarification, or approval work before affected implementation nodes. 
+
+**Constraints** 
+
+1. Critical missing information must reduce readiness or create a blocking discovery node. 
+2. An incomplete package must not be presented as fully ready for execution. 
+
+### 3. Delivery Node Generation 
+
+The engine must decompose the solution into meaningful execution nodes. 
+
+Possible work categories include: 
+
+* Discovery 
+* UX or design 
+* Frontend 
+* Backend or API 
+* Integration 
+* Data engineering 
+* AI implementation 
+* Cloud and DevOps 
+* Security 
+* Testing 
+* Documentation 
+* Deployment 
+* Technical review
+
+Each node must contain: 
+
+* Node ID 
+* Title and objective 
+* Work category 
+* Scope 
+* Source identifiers 
+* Inputs and deliverables 
+* Acceptance conditions 
+* Dependencies 
+* Required skills 
+* Complexity and effort 
+* Risks and assumptions 
+* Blocking status 
+* Operating-model recommendation 
+* Classification rationale 
+* Provenance 
+* Readiness status 
+
+Users must be able to: 
+
+* Edit, add, or remove nodes 
+* Split or merge nodes 
+* Approve or reject AI-generated nodes 
+* Mark nodes as blocked or review-required 
+
+**Constraints** 
+
+1. Every node must be grounded in imported information or an approved user decision. 
+2. Unsupported or generic nodes must not be treated as ready for execution. 
+
+### 4. Operating-Model Classification and Execution-Package Generation 
+
+Every executable node must be classified as: 
+
+* flexible-talent 
+* challenge 
+* private-pod
+
+The engine must evaluate the work characteristics and explain the recommendation. 
+
+**Flexible Talent Package** 
+
+A Flexible Talent package should include: 
+
+* Required roles and skills 
+* Seniority or experience 
+* Duration or capacity 
+* Responsibilities 
+* Start dependencies 
+* Required access and environment 
+* Readiness status 
+
+**Challenge Package** 
+
+A Challenge package should include: 
+
+* Challenge objective 
+* Business and technical context 
+* Deliverables 
+* Evaluation criteria 
+* Acceptance conditions 
+* Input assets 
+* Required technologies or skills 
+* Dependencies 
+* Confidentiality limitations 
+* Expected review process 
+* Readiness status 
+
+**Private Pod Package** 
+
+A Private Pod package should include: 
+
+* Pod objective 
+* Required roles and skills 
+* Technical-leadership needs 
+* Component ownership 
+* Delivery responsibilities 
+* Security and access requirements 
+* Coordination dependencies 
+* Expected duration 
+* Definition of completion 
+* Readiness status
+
+**Constraints** 
+
+1. Every node must have exactly one primary operating model and an explainable rationale. 
+2. The engine must support mixed-model graphs and must not assume that every node should be a Challenge. 
+3. If work requires multiple active models, the engine should recommend splitting the node or defining a clear handoff. 
+4. Nodes must not be marked ready when the information required by the selected operating model is missing. 
+
+### 5. DAG Construction and Dependency Management 
+
+The engine must connect approved nodes into a Directed Acyclic Graph. 
+
+Each edge must include: 
+
+* Source node 
+* Target node 
+* Dependency type 
+* Rationale 
+* Source identifiers 
+* Blocking status 
+* Required input or handoff 
+
+The engine must identify: 
+
+* Cycles 
+* Orphan nodes 
+* Self-dependencies 
+* Duplicate or invalid edges 
+* Blocked nodes 
+* Entry and terminal nodes 
+* Parallel and sequential work 
+
+The engine must calculate: 
+
+* Execution waves 
+* Critical path 
+* Earliest start opportunities 
+* Graph-level effort and duration 
+* Operating-model distribution by wave 
+
+**Constraints** 
+
+1. A graph containing a cycle must not be marked ready. 
+2. Every dependency must include a source-backed or user-reviewed rationale. 
+
+### 6. Change Impact and Quality Validation 
+
+Users must be able to modify: 
+
+* Node scope 
+* Work category 
+* Operating model 
+* Dependencies 
+* Source assignments 
+* Effort 
+* Acceptance conditions 
+* Blocking status 
+
+After a change, the engine must identify: 
+
+* Affected and unaffected nodes 
+* Changed dependencies 
+* Invalidated execution packages 
+* Operating-model changes 
+* Changed execution waves 
+* Critical-path changes 
+* Effort or duration changes 
+* Newly blocked or newly ready nodes 
+
+The quality gate must check: 
+
+* Source coverage 
+* Unsupported nodes 
+* Duplicate or overlapping scope 
+* Missing inputs or acceptance conditions 
+* Operating-model classification completeness 
+* Missing classification rationale 
+* Model-to-work mismatch 
+* Missing model-specific package information 
+* Cycles and orphan nodes 
+* Invalid dependencies 
+* Blocked or stale nodes 
+* Critical-path completeness 
+
+Quality statuses must include: 
+
+* Ready 
+* Review Required 
+* Blocked
+
+**Constraints** 
+
+1. Every node must have a valid operating model before the graph can be marked Ready. 
+2. Changes must preserve approved and unaffected nodes and execution packages. 
+
+### 7. Visualization and Export 
+
+The application must provide: 
+
+* Deal summary 
+* Package-maturity status 
+* Node inventory 
+* Visual DAG 
+* Dependency view 
+* Execution waves 
+* Critical path 
+* Blocked-node view 
+* Operating-model summary 
+* Effort and duration summary 
+* Traceability 
+* Quality-gate result 
+* Model-specific package previews 
+
+The graph should visually distinguish: 
+
+* Flexible Talent nodes 
+* Challenge nodes 
+* Private Pod nodes 
+* Blocked nodes 
+* Critical-path nodes 
+* Review-required nodes 
+
+The application must export at least: 
+
+* Machine-readable graph JSON 
+* Human-readable execution plan 
+
+The export must preserve: 
+
+* Node IDs 
+* Source IDs 
+* Dependencies 
+* Operating-model classifications and rationales 
+* Execution waves 
+* Critical path 
+* Quality findings 
+* Readiness status 
+
+**Constraints** 
+
+1. Exported packages must preserve source references and graph dependencies. 
+2. Blocked or incomplete nodes must be marked as not ready for operational handoff. 
+ 
+## Canonical Internal Model 
+
+The supplied JSON files are full workspace exports. Submissions may use their own internal model but must normalize the imported data into an equivalent structure. 
+
+```
+{ 
+  "schemaVersion": "1.0", 
+  "deal": { 
+    "id": "DEAL_SAMPLE_001", 
+    "title": "Sample Deal", 
+    "maturity": "review-required" 
+  }, 
+  "scope": { 
+    "requirements": [], 
+    "assumptions": [], 
+    "questions": [], 
+    "gaps": [], 
+    "risks": [], 
+    "dependencies": [] 
+  }, 
+  "functionalScope": { 
+    "capabilities": [], 
+    "workstreams": [] 
+  }, 
+  "architecture": { 
+    "platform": "azure", 
+    "components": [], 
+    "flows": [] 
+  }, 
+  "strategy": { 
+    "dataDomains": [], 
+    "integrations": [], 
+    "aiUseCases": [] 
+  }, 
+  "delivery": { 
+    "phases": [], 
+    "workstreams": [], 
+    "timeline": {}, 
+    "confidence": "medium" 
+  }, 
+  "quality": { 
+    "status": "review-required", 
+    "findings": [] 
+  } 
+} 
+```
+
+Evaluators must not be required to create this file manually. 
+
+ 
+### Execution Node Example 
+
+```
+{ 
+  "id": "NODE_001",
+  "title": "Implement Patient Intake API",
+  "objective": "Deliver secure APIs for patient intake and validation.",
+  "workCategory": "backend-api",
+  "operatingModel": {
+    "primary": "private-pod",
+    "alternatives": ["flexible-talent"],
+    "confidence": "high",
+    "rationale": [
+      "The work is connected to identity, clinical data, and document-processing components.",
+      "The work requires coordinated backend, security, and integration skills.",
+      "Healthcare data restrictions require controlled access."
+    ],
+    "sourceIds": ["FR_01", "SEC_01", "INT_01", "ARC_02"],
+    "overridden": false
+  },
+  "inputs": [
+    "Approved API contract",
+    "Identity-provider configuration"
+  ],
+  "deliverables": [
+    "Patient intake API",
+    "Validation rules",
+    "Automated tests"
+  ],
+  "acceptanceConditions": [
+    "Required fields are validated.",
+    "Unauthorized requests are rejected.",
+    "Automated tests pass."
+  ],
+  "dependsOn": [],
+  "effort": {
+    "minimum": 5,
+    "maximum": 8,
+    "unit": "person-days"
+  },
+  "provenance": "ai-recommended",
+  "readiness": "review-required"
+}
+```
+
+ 
+### Mixed-Model Graph Example 
+
+```
+{ 
+  "graphId": "GRAPH_001", 
+  "dealId": "DEAL_SAMPLE_001", 
+  "nodes": [ 
+    { 
+      "id": "NODE_001", 
+      "title": "Confirm External API Contracts", 
+      "workCategory": "discovery", 
+      "operatingModel": { 
+        "primary": "flexible-talent", 
+        "alternatives": [], 
+        "confidence": "high", 
+        "rationale": [ 
+          "The work requires one integration specialist.", 
+          "The expected output is a focused technical assessment." 
+        ] 
+      }, 
+      "sourceIds": ["GAP_01", "Q_02"], 
+      "readiness": "ready" 
+    }, 
+    { 
+      "id": "NODE_002", 
+      "title": "Explore Customer Experience Concepts", 
+      "workCategory": "ux-design", 
+      "operatingModel": { 
+        "primary": "challenge", 
+        "alternatives": ["flexible-talent"], 
+        "confidence": "medium", 
+        "rationale": [ 
+          "Multiple design approaches would add value.", 
+          "The outputs can be evaluated against clear usability criteria." 
+        ] 
+      }, 
+      "sourceIds": ["FR_02", "NFR_03"], 
+      "readiness": "ready" 
+    }, 
+    { 
+      "id": "NODE_003", 
+      "title": "Deliver the Integrated Platform", 
+      "workCategory": "solution-delivery", 
+      "operatingModel": { 
+        "primary": "private-pod", 
+        "alternatives": [], 
+        "confidence": "high", 
+        "rationale": [ 
+          "The work spans frontend, backend, AI, security, and integrations.", 
+          "The components require continuous technical coordination.", 
+          "Restricted data requires a controlled team." 
+        ] 
+      }, 
+      "sourceIds": ["CAP_01", "ARC_01", "ARC_02", "AI_01"], 
+      "readiness": "review-required" 
+    } 
+  ], 
+  "edges": [ 
+    { 
+      "id": "EDGE_001", 
+      "source": "NODE_001", 
+      "target": "NODE_003", 
+      "type": "blocking-discovery", 
+      "rationale": "The delivery pod requires confirmed external API contracts.", 
+      "blocking": true 
+    }, 
+    { 
+      "id": "EDGE_002", 
+      "source": "NODE_002", 
+      "target": "NODE_003", 
+      "type": "design-handoff", 
+      "rationale": "The delivery pod requires an approved intake experience.", 
+      "blocking": true 
+    } 
+  ], 
+  "operatingModelSummary": { 
+    "flexibleTalent": 1, 
+    "challenge": 1, 
+    "privatePod": 1 
+  } 
+} 
+```
+ 
+## AI-Generated Content and Provenance 
+
+The application should record the origin of important outputs as: 
+
+* Imported 
+* AI-inferred 
+* AI-recommended 
+* User-created 
+* User-approved 
+* Deterministically calculated 
+
+Provenance should be retained for: 
+
+* Execution nodes 
+* Dependencies 
+* Operating-model recommendations 
+* Acceptance conditions 
+* Risks and assumptions 
+* Effort estimates 
+* Quality findings
+
+A generic “Generated by AI” badge is not sufficient. Reviewers must be able to inspect source references, classification rationale, deterministic calculations, and user decisions. 
+
+ 
+## AI and Deterministic Logic 
+
+AI may be used for: 
+
+* Delivery decomposition 
+* Operating-model recommendations 
+* Dependency suggestions 
+* Role and skill recommendations 
+* Execution-package drafting 
+* Acceptance-condition drafting 
+* Risk identification 
+* Change-impact explanation 
+
+Deterministic logic should be used for: 
+
+* Identifier and reference validation 
+* Cycle and orphan detection 
+* Coverage calculation 
+* Execution waves 
+* Critical path 
+* Classification completeness 
+* Effort aggregation 
+* Quality-gate status 
+* Export readiness 
+
+Human review should control: 
+
+* Final graph approval 
+* Node splits and merges 
+* Operating-model overrides 
+* Sensitive-work decisions 
+* Blocker resolution 
+* Operational handoff readiness 
+
+Paid AI access must not be required. The complete workflow for all four supplied packages must run in a clearly labelled mock mode. 
+
+ 
+## Solution Depth Requirement 
+
+The following are not sufficient: 
+
+* A list of challenges 
+* A static graph 
+* A project board 
+* A graph where every node is automatically classified as Challenge 
+* A single AI prompt that splits the deal into tasks 
+* A manually configured demonstration 
+
+A valid submission must demonstrate: 
+
+* Package normalization 
+* Package-maturity assessment 
+* Grounded execution nodes 
+* Classification across the three operating models 
+* Explainable classification rationale 
+* Single-model and mixed-model graph support 
+* Dependency-aware DAG generation 
+* Execution waves and critical path 
+* Change impact 
+* Quality validation 
+* Model-specific execution packages 
+ 
+## Recommended Application Sections 
+
+### 1. Deal Import Workspace 
+
+* JSON upload or paste 
+* Source validation 
+* Normalized package summary 
+* Package-maturity assessment 
+* Blocker review 
+
+### 2. Delivery Decomposition Workspace 
+
+* Generated node inventory 
+* Node editing 
+* Split and merge controls 
+* Source references 
+* Operating-model recommendations 
+
+### 3. Graph Workspace 
+
+* DAG visualization 
+* Dependency editing 
+* Cycle and orphan detection 
+* Parallel paths 
+* Blocked nodes 
+* Operating-model indicators
+
+### 4. Execution Planning Workspace 
+
+* Execution waves 
+* Critical path 
+* Effort and duration 
+* Operating-model distribution 
+* Review checkpoints 
+
+### 5. Execution Package Workspace 
+
+* Flexible Talent requirement package 
+* Challenge brief 
+* Private Pod delivery package 
+* Inputs and deliverables 
+* Acceptance conditions 
+* Handoff readiness 
+
+### 6. Validation and Export Workspace 
+
+* Traceability and coverage 
+* Classification validation 
+* Change impact 
+* Quality gate 
+* Graph JSON export 
+* Model-specific package export 
+ 
+## Technology Expectations 
+
+The technology stack is flexible. 
+
+The solution should be: 
+
+* Browser-accessible 
+* Runnable locally 
+* Responsive and visually clear 
+* Independent of mandatory paid services 
+* Maintainable and documented 
+* Secure in handling imported information 
+* Transparent about AI recommendations, classifications, calculations, and blockers 
+* Authentication is optional. 
+
+ 
+## Deliverables 
+
+**1. Working Application** 
+
+The application must include: 
+
+* Import of all four supplied JSON packages 
+* Validation and normalization 
+* Maturity assessment 
+* Delivery-node generation 
+* Operating-model classification 
+* Classification rationale 
+* DAG visualization 
+* Dependency editing 
+* Execution waves and critical path 
+* Change-impact handling 
+* Quality validation 
+* Graph and model-specific package export 
+* Mock AI mode 
+
+**2. Source Code** 
+
+* The source code should be clean, modular, documented, and easy to run. 
+
+**3. Source-to-Canonical Mapping** 
+
+The repository must document: 
+
+* Imported sections 
+* Ignored sections 
+* Normalization rules 
+* Identifier-preservation rules 
+* Compatibility assumptions 
+
+**4. Sample Outputs** 
+
+The repository must include: 
+
+* Graph JSON for all four packages 
+* At least one Flexible Talent package 
+* At least one Challenge package 
+* At least one Private Pod package 
+* At least one mixed-model graph 
+* Quality-gate results for each graph
+
+**5. Automated Tests** 
+
+Tests should verify: 
+
+* All four supplied files import successfully 
+* Source IDs are preserved 
+* Every executable node has exactly one primary operating model 
+* Classification rationales are present 
+* Single-model and mixed-model graphs are supported 
+* Missing information creates blockers or discovery nodes 
+* Cycles and orphan nodes are detected 
+* Execution waves and critical paths are correct 
+* Classification changes affect the appropriate outputs 
+* Unaffected nodes are preserved 
+* Exports preserve models, rationales, and dependencies 
+* Mock mode supports all supplied packages 
+
+**6. README** 
+
+The README must explain: 
+
+* Local setup 
+* Package import and normalization 
+* Decomposition logic 
+* Operating-model criteria 
+* Classification rationale 
+* Mixed-model handling 
+* Dependency generation 
+* Execution waves and critical path 
+* Change impact 
+* Quality validation 
+* Export 
+* Mock mode 
+* Known limitations
+
+**7. Submission Architecture Diagram** 
+
+The architecture diagram should show: 
+
+* Input validation 
+* Package normalization 
+* Canonical model 
+* AI orchestration 
+* Delivery decomposition 
+* Operating-model classifier 
+* DAG engine 
+* Change-impact engine 
+* Quality gate 
+* Export layer 
+* Mock provider 
+
+**8. Demo Video** 
+
+Recommended duration: 3 to 5 minutes. 
+
+The demo should show: 
+
+* Importing a supplied package 
+* Generating delivery nodes 
+* Reviewing Flexible Talent, Challenge, and Private Pod classifications 
+* Reviewing classification rationales 
+* Reviewing a mixed-model DAG 
+* Reviewing execution waves and the critical path 
+* Overriding an operating-model classification 
+* Reviewing the resulting impact 
+* Running the quality gate 
+* Exporting the graph and model-specific packages 
+* Confirming mock mode 
+ 
+## Evaluation Criteria 
+
+**1. Input Validation and Normalization: 15%** 
+
+* Import of all supplied packages 
+* Source-ID preservation 
+* Reference validation 
+* Package-maturity assessment 
+* Missing-information handling 
+
+**2. Delivery Decomposition Quality: 20%** 
+
+* Meaningful execution units 
+* Appropriate scope boundaries 
+* Inputs, outputs, and acceptance conditions 
+* Requirement and architecture grounding 
+* Discovery and blocker handling 
+
+**3. Operating-Model Classification: 20%** 
+
+* Correct use of Flexible Talent, Challenge, and Private Pod 
+* Work-specific evaluation 
+* Explainable rationale 
+* Classification confidence 
+* Alternative-model handling 
+* Single-model and mixed-model support 
+* User overrides 
+* Model-specific package completeness 
+* No assumption that every node is a Challenge 
+
+**4. DAG and Dependency Management: 15%** 
+
+* Dependency correctness 
+* Cycle and orphan detection 
+* Parallelization 
+* Execution waves 
+* Critical path 
+* Graph usability 
+
+**5. Change Impact and Quality Validation: 10%** 
+
+* Impact identification 
+* Operating-model change handling 
+* Preservation of unaffected nodes 
+* Readiness validation 
+* Controlled regeneration 
+
+**6. Execution Plan and Export: 10%** 
+
+* Operating-model summary 
+* Graph export 
+* Model-specific packages 
+* Dependency preservation 
+* Readiness labels 
+
+**7. UX and Visual Design: 5%** 
+
+* Clear classification experience 
+* Graph readability 
+* Editing usability 
+* Professional presentation
+
+**8. Code Quality and Documentation: 5%** 
+
+* Maintainable architecture 
+* Structured models 
+* Automated tests 
+* Local setup 
+* Mock mode 
+* Documentation 
+
+### Total: 100% 
+
+ 
+ 
+## Success Definition 
+
+A successful submission allows an evaluator to: 
+
+1. Import all four supplied JSON packages. 
+2. Review package maturity and blockers. 
+3. Generate grounded execution nodes. 
+4. Classify every executable node as Flexible Talent, Challenge, or Private Pod. 
+5. Understand the reason for every classification. 
+6. Generate a graph using one or multiple operating models. 
+7. Review model-specific execution packages. 
+8. Detect cycles, orphan nodes, and invalid dependencies. 
+9. Review execution waves and the critical path. 
+10. Override an operating model and review the impact. 
+11. Preserve unaffected nodes. 
+12. Run the quality gate. 
+13. Prevent incomplete work from appearing ready. 
+14. Export source-traceable graph JSON and model-specific packages. 
+15. Run the complete workflow without paid AI access.

@@ -1,0 +1,22 @@
+{
+  "id": "DEAL_SUPPLY_MOCK",
+  "gaps": [
+    {
+      "title": "Event coverage unconfirmed",
+      "id": "GAP-S-01"
+    }
+  ],
+  "title": "Unified Supply Chain Analytics",
+  "integrations": [
+    {
+      "name": "ERP events",
+      "id": "INT-S-01"
+    }
+  ],
+  "requirements": [
+    {
+      "title": "Inventory analytics",
+      "id": "REQ-S-01"
+    }
+  ]
+}
