@@ -21,6 +21,8 @@ python -m http.server 4173
 node .\qa-smoke.cjs
 ```
 
+拿到官方四个 JSON 后，可先运行 `node .\validate-official-packages.cjs <目录>` 做一次离线文件和结构检查。
+
 ## 已实现的演示流程
 
 1. **导入与成熟度**：保留导入的 source package，显示成熟度、分数、阻塞项和输入校验结果。导入未知结构时，原始 `id` 字段会被用作 traceability refs。
@@ -37,6 +39,7 @@ node .\qa-smoke.cjs
 - `SUBMISSION_CHECKLIST.md`：四包导入、样例输出、测试和演示检查项。
 - `DEMO_SCRIPT.md`：三分钟英文演示顺序和旁白。
 - `SUBMISSION_TEXT.md`：可直接用于提交表单的英文项目说明、运行方式和验证范围。
+- `validate-official-packages.cjs`：官方四包的文件名、JSON 和根结构检查器。
 - `LICENSE`：可随提交包一起分发的 MIT 许可证。
 - `sample-outputs/`：四个内置情境的可审阅 graph JSON、模型包和质量门结果；这些是 mock 输出，不冒充官方输入包。
 
