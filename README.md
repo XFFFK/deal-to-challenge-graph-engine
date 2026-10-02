@@ -2,6 +2,8 @@
 
 这是一个无依赖的浏览器原型，用于演示 Topcoder **Flexible Talent / Challenge / Private Pod** 三种 operating model 的执行图编排。它不调用网络、不需要 API key，也不会向 Topcoder 自动注册、发起 Challenge 或提交任务。
 
+公开演示：<https://deal-to-challenge-graph-engine.xufanke.chatgpt.site>
+
 ## 运行
 
 在本目录启动静态文件服务器（直接双击 `index.html` 也能运行基础功能）：
