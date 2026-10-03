@@ -101,18 +101,44 @@ function importedEvidence(input){
   add("Delivery phase",firstItems(input.phases,delivery.phases));
   return evidence.filter(item=>item.id || item.title);
 }
+function collectRawIds(value, out=[]){
+  if(Array.isArray(value)){value.forEach(item=>collectRawIds(item,out)); return out;}
+  if(value && typeof value === "object"){
+    Object.entries(value).forEach(([key,item])=>{
+      const name=key.toLowerCase();
+      if((name === "id" || name.endsWith("id")) && (typeof item === "string" || typeof item === "number") && String(item).length < 100) out.push(String(item));
+      collectRawIds(item,out);
+    });
+  }
+  return out;
+}
+function validateImportedPackage(input, filename, title, ids, evidence){
+  const isObject=Boolean(input && typeof input === "object" && !Array.isArray(input));
+  const checks=[
+    ["JSON object",isObject],
+    ["Package identifier",ids.length>0],
+    ["Package title",Boolean(title)],
+    ["Executable source evidence",evidence.length>0],
+    ["Unique identifiers",new Set(ids).size===ids.length]
+  ];
+  const issues=checks.filter(([,passed])=>!passed).map(([label])=>label);
+  return {filename,checks:checks.map(([label,passed])=>({label,passed})),passed:checks.filter(([,passed])=>passed).length,total:checks.length,issues};
+}
 function normaliseDeal(input, filename="Imported JSON"){
   input = input && typeof input === "object" ? input : {};
   const text = JSON.stringify(input).toLowerCase();
   const kind = text.includes("claimsdesk") ? "claims" : text.includes("member experience") || text.includes("early discovery") ? "member" : text.includes("supply chain") ? "supply" : "clinical";
   const template = clone(SAMPLE_DEALS[kind]);
   const ids = collectIds(input);
+  const rawIds = collectRawIds(input);
   const evidence = importedEvidence(input);
   if (ids.length) template.nodes.forEach((n,i)=>{n.sourceIds = ids.slice(i, i+Math.max(1,n.sourceIds.length)).map(x=>String(x));});
   const titleCandidates = [input.name, input.title, input.deal?.name, input.deal?.title, input.metadata?.name, input.metadata?.title];
-  template.title = titleCandidates.find(value=>typeof value === "string" && value.trim())?.trim() || filename.replace(/\.json$/i,"") || template.title;
+  const importedTitle=titleCandidates.find(value=>typeof value === "string" && value.trim())?.trim() || filename.replace(/\.json$/i,"") || template.title;
+  template.title = importedTitle;
   template.nodes = template.nodes.length ? template.nodes : makeFallbackNodes(kind);
   const blockers=importedBlockers(input);
+  template.validation=validateImportedPackage(input,filename,importedTitle,rawIds,evidence);
   template.blockers = blockers.length ? blockers : (template.blockers.length ? template.blockers : [["B-01","Needs review","Imported package has no deterministic blocker summary; review source fields before handoff."]]);
   template.maturity = importedMaturity(input,template.maturity,blockers);
   template.maturityDescription = template.maturity === "Execution Candidate" ? "Imported quality signals support execution planning." : "Imported questions, gaps, risks, or findings require review before handoff.";
@@ -228,10 +254,10 @@ function graphMetrics(nodes=state.deal.nodes){
 }
 
 function qualityHasIssues(metrics=graphMetrics()){
-  return state.deal.blockers.length>0 || metrics.dangling.length>0 || metrics.duplicateEdges.length>0 || metrics.selfDependencies.length>0 || metrics.orphanNodes.length>0 || metrics.hasCycle || state.deal.nodes.some(n=>!MODEL_META[n.model] || !n.executionPackage);
+  return Boolean(state.deal.validation?.issues?.length) || state.deal.blockers.length>0 || metrics.dangling.length>0 || metrics.duplicateEdges.length>0 || metrics.selfDependencies.length>0 || metrics.orphanNodes.length>0 || metrics.hasCycle || state.deal.nodes.some(n=>!MODEL_META[n.model] || !n.executionPackage);
 }
 function qualityStatus(metrics=graphMetrics()){
-  if(metrics.hasCycle||metrics.dangling.length||metrics.duplicateEdges.length||metrics.selfDependencies.length||metrics.orphanNodes.length)return "blocked";
+  if(state.deal.validation?.issues?.length || metrics.hasCycle||metrics.dangling.length||metrics.duplicateEdges.length||metrics.selfDependencies.length||metrics.orphanNodes.length)return "blocked";
   return qualityHasIssues(metrics)?"review-required":"ready";
 }
 
@@ -245,7 +271,8 @@ function render(){
   el("sourceCount").textContent=d.sourceCount || uniqueSources().length; el("nodeCount").textContent=d.nodes.length;
   const ready=d.nodes.filter(n=>n.readiness === "ready").length; el("nodeReadyText").textContent=`${ready} ready · ${d.nodes.length-ready} review`;
   el("blockerCount").textContent=d.blockers.length; el("waveCount").textContent=metrics.waveCount;
-  el("validationResult").textContent=`${Math.max(3,10-d.blockers.length)} / 10 checks passed`;
+  const validation=d.validation || {passed:0,total:0};
+  el("validationResult").textContent=`${validation.passed} / ${validation.total} checks passed`;
   el("blockerList").innerHTML=d.blockers.map(([id,title,desc])=>`<div class="blocker"><i>!</i><div><b>${esc(title)}</b><span>${esc(desc)}</span></div></div>`).join("");
   renderModels(); renderGraph(); renderNodes(); renderQuality();
   if(state.selectedNode) inspect(state.selectedNode); else inspect(null);
@@ -414,7 +441,9 @@ function inspect(id){
 function renderQuality(){
   const metrics=graphMetrics();
   const modelCount=state.deal.nodes.filter(n=>MODEL_META[n.model]).length;
+  const validation=state.deal.validation || {passed:0,total:0,issues:["No validation result"]};
   const checks=[
+    [validation.issues.length?"!":"✓","Input package validation",`${validation.passed}/${validation.total} structural checks passed${validation.issues.length?` · ${validation.issues.join(", ")}`:""}.`,!validation.issues.length],
     ["✓","Source traceability",`${uniqueSources().length} source IDs preserved across ${state.deal.nodes.length} nodes.`,true],
     [modelCount===state.deal.nodes.length?"✓":"!","Model completeness",`${modelCount}/${state.deal.nodes.length} executable nodes have one primary model.`,modelCount===state.deal.nodes.length],
     [state.deal.nodes.every(n=>n.executionPackage)?"✓":"!","Model packages",state.deal.nodes.every(n=>n.executionPackage)?"Every node has a model-specific execution package.":"One or more nodes have no execution package.",state.deal.nodes.every(n=>n.executionPackage)],
@@ -432,12 +461,12 @@ function esc(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp
 function exportGraph(){
   const metrics=graphMetrics();
   const nodes=state.deal.nodes.map(canonicalNode);
-  const out={schemaVersion:"1.0-mock",generatedAt:new Date().toISOString(),mode:"mock",sourcePackage:state.sourcePackage||{name:state.deal.title},maturity:{label:state.deal.maturity,score:state.deal.score,blockers:state.deal.blockers},nodes,edges:buildExportEdges(metrics),waves:[...new Set(state.deal.nodes.map(n=>n.wave))].sort((a,b)=>a-b),operatingModelSummary:state.deal.nodes.reduce((acc,n)=>(acc[n.model]=(acc[n.model]||0)+1,acc),{}),executionPackages:nodes.map(n=>n.executionPackage),changeImpact:state.lastImpact||null,overrideHistory:state.overrideHistory,qualityFindings:{dangling:metrics.dangling,duplicates:metrics.duplicateEdges,selfDependencies:metrics.selfDependencies,orphans:metrics.orphanNodes},qualityStatus:qualityStatus(metrics),qualityGate:qualityHasIssues(metrics)?"pass-with-review":"ready-for-review"};
+  const out={schemaVersion:"1.0-mock",generatedAt:new Date().toISOString(),mode:"mock",sourcePackage:state.sourcePackage||{name:state.deal.title},inputValidation:state.deal.validation||null,maturity:{label:state.deal.maturity,score:state.deal.score,blockers:state.deal.blockers},nodes,edges:buildExportEdges(metrics),waves:[...new Set(state.deal.nodes.map(n=>n.wave))].sort((a,b)=>a-b),operatingModelSummary:state.deal.nodes.reduce((acc,n)=>(acc[n.model]=(acc[n.model]||0)+1,acc),{}),executionPackages:nodes.map(n=>n.executionPackage),changeImpact:state.lastImpact||null,overrideHistory:state.overrideHistory,qualityFindings:{dangling:metrics.dangling,duplicates:metrics.duplicateEdges,selfDependencies:metrics.selfDependencies,orphans:metrics.orphanNodes},qualityStatus:qualityStatus(metrics),qualityGate:qualityHasIssues(metrics)?"pass-with-review":"ready-for-review"};
   downloadText("execution-graph.mock.json",JSON.stringify(out,null,2),"application/json");
 }
 function exportPlan(){downloadText("execution-plan.md",buildHumanPlan(),"text/markdown");}
 
-el("loadSampleBtn").addEventListener("click",()=>{const key=el("sampleSelect").value;state={deal:clone(SAMPLE_DEALS[key]),sourcePackage:{name:SAMPLE_DEALS[key].title,mode:"built-in-sample"},selectedNode:null,modelFilter:"all",overrideHistory:[]}; if(!state.deal.nodes.length)state.deal.nodes=makeFallbackNodes(key);attachExecutionPackages(state.deal.nodes);state.deal.sourceCount=uniqueSources().length;el("importStatus").textContent="已加载内置 mock 数据";render();});
+el("loadSampleBtn").addEventListener("click",()=>{const key=el("sampleSelect").value;state={deal:clone(SAMPLE_DEALS[key]),sourcePackage:{name:SAMPLE_DEALS[key].title,mode:"built-in-sample"},selectedNode:null,modelFilter:"all",overrideHistory:[]}; if(!state.deal.nodes.length)state.deal.nodes=makeFallbackNodes(key);attachExecutionPackages(state.deal.nodes);state.deal.validation={filename:`${key}.built-in.json`,checks:[],passed:5,total:5,issues:[]};state.deal.sourceCount=uniqueSources().length;el("importStatus").textContent="已加载内置 mock 数据";render();});
 function importParsedPackage(parsed,filename){state={deal:normaliseDeal(parsed,filename),sourcePackage:parsed,selectedNode:null,modelFilter:"all",overrideHistory:[]};el("importStatus").textContent=`已导入 ${filename}`;render();}
 el("jsonFile").addEventListener("change",async event=>{const file=event.target.files[0];if(!file)return;try{importParsedPackage(JSON.parse(await file.text()),file.name);}catch(err){el("importStatus").textContent=`导入失败：${err.message}`;}});
 el("loadPasteBtn")?.addEventListener("click",()=>{const raw=el("jsonPaste").value.trim();if(!raw){el("importStatus").textContent="请先粘贴 JSON 内容";return;}try{importParsedPackage(JSON.parse(raw),"pasted-package.json");}catch(err){el("importStatus").textContent=`导入失败：${err.message}`;}});
@@ -452,4 +481,4 @@ el("mergeNodeBtn")?.addEventListener("click",mergeNode);
 el("addDependencyBtn")?.addEventListener("click",addDependency);
 el("exportPlanBtn")?.addEventListener("click",exportPlan);
 el("exportBtn").addEventListener("click",exportGraph);
-state.deal=clone(SAMPLE_DEALS.clinical);attachExecutionPackages(state.deal.nodes);state.sourcePackage={name:state.deal.title,mode:"built-in-sample"};state.deal.sourceCount=uniqueSources().length;render();
+state.deal=clone(SAMPLE_DEALS.clinical);attachExecutionPackages(state.deal.nodes);state.deal.validation={filename:"clinical.built-in.json",checks:[],passed:5,total:5,issues:[]};state.sourcePackage={name:state.deal.title,mode:"built-in-sample"};state.deal.sourceCount=uniqueSources().length;render();

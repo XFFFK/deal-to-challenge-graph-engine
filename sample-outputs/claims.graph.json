@@ -1,10 +1,17 @@
 {
   "schemaVersion": "1.0-mock",
-  "generatedAt": "2026-10-02T17:38:53.798Z",
+  "generatedAt": "2026-10-03T18:28:47.364Z",
   "mode": "mock",
   "sourcePackage": {
     "name": "ClaimsDesk Modernization",
     "mode": "built-in-sample"
+  },
+  "inputValidation": {
+    "filename": "claims.built-in.json",
+    "checks": [],
+    "passed": 5,
+    "total": 5,
+    "issues": []
   },
   "maturity": {
     "label": "Execution Candidate",

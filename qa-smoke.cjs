@@ -128,6 +128,8 @@ async function fire(id, type, event = {}) {
   state = app.getState();
   assert.equal(state.deal.title, "Imported QA");
   assert.equal(elements.get("importStatus").textContent, "已导入 qa.json");
+  assert.equal(state.deal.validation.passed, 4);
+  assert.ok(state.deal.validation.issues.includes("Executable source evidence"));
 
   const nested = { deal: { title: "Nested QA" }, source: { itemId: 42 } };
   const nestedFile = { name: "nested.json", text: async () => JSON.stringify(nested) };
@@ -147,6 +149,7 @@ async function fire(id, type, event = {}) {
   await fire("jsonFile", "change", { target: { files: [scopedFile] } });
   state = app.getState();
   assert.equal(state.deal.maturity, "Review Required");
+  assert.equal(state.deal.validation.issues.length, 1);
   assert.ok(state.deal.blockers.some(blocker => blocker[0] === "Q-1"));
   assert.ok(state.deal.blockers.some(blocker => blocker[0] === "G-1"));
   assert.ok(state.deal.blockers.some(blocker => blocker[0] === "A-1"));
@@ -173,6 +176,7 @@ async function fire(id, type, event = {}) {
     await fire("jsonFile", "change", { target: { files: [sampleFile] } });
     state = app.getState();
     assert.equal(state.sourcePackage.id.startsWith("DEAL_"), true);
+    assert.equal(state.deal.validation.issues.length, 0);
     assert.equal(state.deal.nodes.every(node => node.sourceIds.length > 0 && node.executionPackage), true);
     assert.ok(state.deal.nodes.every(node => node.importedEvidence));
   }

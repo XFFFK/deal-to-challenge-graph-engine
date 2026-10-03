@@ -1,10 +1,17 @@
 {
   "schemaVersion": "1.0-mock",
-  "generatedAt": "2026-10-02T17:38:53.801Z",
+  "generatedAt": "2026-10-03T18:28:47.367Z",
   "mode": "mock",
   "sourcePackage": {
     "name": "Clinical Intake & Patient Support Assistant",
     "mode": "built-in-sample"
+  },
+  "inputValidation": {
+    "filename": "clinical.built-in.json",
+    "checks": [],
+    "passed": 5,
+    "total": 5,
+    "issues": []
   },
   "maturity": {
     "label": "Review Required",
