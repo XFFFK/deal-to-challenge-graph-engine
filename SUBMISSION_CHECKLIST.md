@@ -4,7 +4,7 @@
 
 - [ ] Public demo: https://xfffk.github.io/deal-to-challenge-graph-engine/
 - [ ] Source repository: https://github.com/XFFFK/deal-to-challenge-graph-engine
-- [ ] Latest package release: https://github.com/XFFFK/deal-to-challenge-graph-engine/releases/tag/v0.2.3
+- [ ] Latest package release: https://github.com/XFFFK/deal-to-challenge-graph-engine/releases/tag/v0.2.5
 - [ ] Create or verify one personal Topcoder account with accurate profile information.
 - [ ] Keep the account email available for payment setup; do not share passwords or verification codes.
 - [ ] Open the challenge page and confirm the four official JSON packages and final deliverable instructions after registration.
