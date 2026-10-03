@@ -66,6 +66,7 @@ function importedBlockers(input){
   add(input.gaps || scope.gaps,"GAP");
   add(input.dependencies || scope.dependencies,"DEPENDENCY");
   add(input.risks || scope.risks,"RISK");
+  add(input.assumptions || scope.assumptions,"ASSUMPTION");
   return blockers;
 }
 function importedMaturity(input,fallback,blockers){
@@ -74,7 +75,7 @@ function importedMaturity(input,fallback,blockers){
   if(status.includes("blocked")) return "Blocked";
   if(status.includes("review")) return "Review Required";
   if(status.includes("execution") || status === "ready" || status === "approved") return "Execution Candidate";
-  if((Array.isArray(input.questions) && input.questions.length) || (Array.isArray(input.gaps) && input.gaps.length) || (Array.isArray(scope.questions) && scope.questions.length) || (Array.isArray(scope.gaps) && scope.gaps.length)) return "Discovery Required";
+  if((Array.isArray(input.questions) && input.questions.length) || (Array.isArray(input.gaps) && input.gaps.length) || (Array.isArray(input.assumptions) && input.assumptions.length) || (Array.isArray(scope.questions) && scope.questions.length) || (Array.isArray(scope.gaps) && scope.gaps.length) || (Array.isArray(scope.assumptions) && scope.assumptions.length)) return "Discovery Required";
   return blockers.length ? "Review Required" : fallback;
 }
 function importedEvidence(input){
