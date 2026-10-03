@@ -77,12 +77,36 @@ function importedMaturity(input,fallback,blockers){
   if((Array.isArray(input.questions) && input.questions.length) || (Array.isArray(input.gaps) && input.gaps.length) || (Array.isArray(scope.questions) && scope.questions.length) || (Array.isArray(scope.gaps) && scope.gaps.length)) return "Discovery Required";
   return blockers.length ? "Review Required" : fallback;
 }
+function importedEvidence(input){
+  const scope=input.scope && typeof input.scope === "object" ? input.scope : {};
+  const functional=input.functionalScope && typeof input.functionalScope === "object" ? input.functionalScope : {};
+  const architecture=input.architecture && typeof input.architecture === "object" ? input.architecture : {};
+  const strategy=input.strategy && typeof input.strategy === "object" ? input.strategy : {};
+  const delivery=input.delivery && typeof input.delivery === "object" ? input.delivery : {};
+  const firstItems=(...values)=>values.find(value=>Array.isArray(value) && value.length) || [];
+  const evidence=[];
+  const add=(kind,items)=>items.forEach((item,index)=>{
+    const id=itemText(item,["id","itemId","requirementId","capabilityId","componentId","integrationId","useCaseId","phaseId"],"");
+    const title=itemText(item,["title","name","summary","label","description"],`${kind} item ${index+1}`);
+    evidence.push({kind,id,title});
+  });
+  add("Requirement",firstItems(input.requirements,scope.requirements));
+  add("Capability",firstItems(input.capabilities,functional.capabilities));
+  add("Workstream",firstItems(input.workstreams,functional.workstreams,delivery.workstreams));
+  add("Architecture",architecture.components || []);
+  add("Integration",firstItems(input.integrations,strategy.integrations));
+  add("AI use case",firstItems(input.aiUseCases,strategy.aiUseCases));
+  add("Data domain",firstItems(input.dataDomains,strategy.dataDomains));
+  add("Delivery phase",firstItems(input.phases,delivery.phases));
+  return evidence.filter(item=>item.id || item.title);
+}
 function normaliseDeal(input, filename="Imported JSON"){
   input = input && typeof input === "object" ? input : {};
   const text = JSON.stringify(input).toLowerCase();
   const kind = text.includes("claimsdesk") ? "claims" : text.includes("member experience") || text.includes("early discovery") ? "member" : text.includes("supply chain") ? "supply" : "clinical";
   const template = clone(SAMPLE_DEALS[kind]);
   const ids = collectIds(input);
+  const evidence = importedEvidence(input);
   if (ids.length) template.nodes.forEach((n,i)=>{n.sourceIds = ids.slice(i, i+Math.max(1,n.sourceIds.length)).map(x=>String(x));});
   const titleCandidates = [input.name, input.title, input.deal?.name, input.deal?.title, input.metadata?.name, input.metadata?.title];
   template.title = titleCandidates.find(value=>typeof value === "string" && value.trim())?.trim() || filename.replace(/\.json$/i,"") || template.title;
@@ -92,6 +116,15 @@ function normaliseDeal(input, filename="Imported JSON"){
   template.maturity = importedMaturity(input,template.maturity,blockers);
   template.maturityDescription = template.maturity === "Execution Candidate" ? "Imported quality signals support execution planning." : "Imported questions, gaps, risks, or findings require review before handoff.";
   template.score = Math.max(22, Math.min(92, template.score - Math.max(0, template.blockers.length-2)*4));
+  if(evidence.length) template.nodes.forEach((node,index)=>{
+    const item=evidence[index % evidence.length];
+    node.importedEvidence=item;
+    if(item.id) node.sourceIds=[item.id,...node.sourceIds.filter(sourceId=>sourceId!==item.id)];
+    if(item.title) {
+      node.title=`${item.kind} · ${item.title}`;
+      node.objective=`Turn imported ${item.kind.toLowerCase()} “${item.title}” into a bounded delivery unit.`;
+    }
+  });
   attachExecutionPackages(template.nodes);
   template.sourceCount = Math.max(ids.length, template.nodes.reduce((sum,n)=>sum+n.sourceIds.length,0));
   return template;

@@ -137,6 +137,7 @@ async function fire(id, type, event = {}) {
     state = app.getState();
     assert.equal(state.sourcePackage.id.startsWith("DEAL_"), true);
     assert.equal(state.deal.nodes.every(node => node.sourceIds.length > 0 && node.executionPackage), true);
+    assert.ok(state.deal.nodes.every(node => node.importedEvidence));
   }
   console.log("qa-smoke: PASS");
 })().catch(error => { console.error(error); process.exitCode = 1; });
