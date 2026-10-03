@@ -15,7 +15,9 @@ The browser workflow supports:
 
 ## Demo and local run
 
-Live demo: <https://deal-to-challenge-graph-engine.xufanke.chatgpt.site>
+Live demo: <https://xfffk.github.io/deal-to-challenge-graph-engine/>
+
+Backup demo: <https://deal-to-challenge-graph-engine.xufanke.chatgpt.site>
 
 The repository runs without a build step or paid AI service:
 

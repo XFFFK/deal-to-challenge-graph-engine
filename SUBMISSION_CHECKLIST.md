@@ -2,8 +2,8 @@
 
 ## Before registration opens
 
-- [ ] Public demo: https://deal-to-challenge-graph-engine.xufanke.chatgpt.site
-- [ ] GitHub Pages mirror: https://xfffk.github.io/deal-to-challenge-graph-engine/
+- [ ] Public demo: https://xfffk.github.io/deal-to-challenge-graph-engine/
+- [ ] Backup demo: https://deal-to-challenge-graph-engine.xufanke.chatgpt.site
 - [ ] Source repository: https://github.com/XFFFK/deal-to-challenge-graph-engine
 - [ ] Latest package release: https://github.com/XFFFK/deal-to-challenge-graph-engine/releases/tag/v0.1.6
 - [ ] Create or verify one personal Topcoder account with accurate profile information.

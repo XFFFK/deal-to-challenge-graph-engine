@@ -2,9 +2,9 @@
 
 这是一个无依赖的浏览器原型，用于演示 Topcoder **Flexible Talent / Challenge / Private Pod** 三种 operating model 的执行图编排。它不调用网络、不需要 API key，也不会向 Topcoder 自动注册、发起 Challenge 或提交任务。
 
-公开演示：<https://deal-to-challenge-graph-engine.xufanke.chatgpt.site>
+公开演示：<https://xfffk.github.io/deal-to-challenge-graph-engine/>
 
-GitHub Pages 备用演示：<https://xfffk.github.io/deal-to-challenge-graph-engine/>
+备用演示：<https://deal-to-challenge-graph-engine.xufanke.chatgpt.site>
 
 ## 运行
 
