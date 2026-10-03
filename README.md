@@ -13,7 +13,7 @@ cd C:\Users\Administrator\Documents\Codex\2026-10-02\new-chat\work\topcoder-grap
 python -m http.server 4173
 ```
 
-然后打开 <http://localhost:4173>。默认加载 Clinical Intake 样例；“样例 Deal”可以切换其它三种情境，也可以通过文件选择器导入任意 JSON 包。
+然后打开 <http://localhost:4173>。默认加载 Clinical Intake 样例；“样例 Deal”可以切换其它三种情境，也可以通过文件选择器或粘贴框导入任意 JSON 包。
 
 最小自动化回归检查（无需依赖或联网）：
 

@@ -13,7 +13,8 @@ const ids = [
   "executionPackage", "dependencyList", "dependencySelect", "addDependencyBtn", "exportPlanBtn",
   "sampleSelect", "loadSampleBtn", "jsonFile", "importStatus", "modelFilter", "runQualityBtn",
   "applyOverrideBtn", "exportBtn", "addNodeBtn", "saveNodeBtn", "removeNodeBtn", "splitNodeBtn",
-  "mergeNodeSelect", "mergeNodeBtn", "editTitle", "editDuration", "editObjective", "editAcceptance"
+  "mergeNodeSelect", "mergeNodeBtn", "editTitle", "editDuration", "editObjective", "editAcceptance",
+  "jsonPaste", "loadPasteBtn"
 ];
 
 function makeElement(id) {
@@ -134,6 +135,12 @@ async function fire(id, type, event = {}) {
   state = app.getState();
   assert.equal(state.deal.title, "Nested QA");
   assert.ok(state.deal.nodes.some(node => node.sourceIds.includes("42")));
+
+  elements.get("jsonPaste").value = JSON.stringify({ title: "Pasted QA", requirements: [{ id: "REQ-P-1", title: "Paste path" }] });
+  await fire("loadPasteBtn", "click");
+  state = app.getState();
+  assert.equal(state.deal.title, "Pasted QA");
+  assert.equal(elements.get("importStatus").textContent, "已导入 pasted-package.json");
 
   const scoped = { title: "Scoped QA", scope: { questions: [{ id: "Q-1", question: "API contract?" }], gaps: [{ id: "G-1", summary: "Missing volume" }], assumptions: [{ id: "A-1", summary: "Region is fixed" }] }, quality: { status: "review-required" } };
   const scopedFile = { name: "scoped.json", text: async () => JSON.stringify(scoped) };

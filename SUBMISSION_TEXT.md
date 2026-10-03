@@ -7,6 +7,7 @@ Deal-to-Challenge Graph Engine turns a reviewed deal-scoping package into an exe
 The browser workflow supports:
 
 - four supplied package shapes through a shared normalization layer;
+- JSON file upload and paste import through the same normalization path;
 - Flexible Talent, Challenge, and Private Pod classifications with rationales and confidence;
 - node editing, addition, removal, split, and merge controls with user-decision provenance;
 - dependency editing with cycle rejection, execution waves, and critical-path analysis;
