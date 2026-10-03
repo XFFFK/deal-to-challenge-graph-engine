@@ -51,6 +51,7 @@ function itemText(item, keys, fallback){
 }
 function importedBlockers(input){
   const blockers=[];
+  const scope=input.scope && typeof input.scope === "object" ? input.scope : {};
   const add=(items,prefix)=>{
     if(!Array.isArray(items)) return;
     items.forEach((item,index)=>{
@@ -60,19 +61,20 @@ function importedBlockers(input){
       blockers.push([id,title,description]);
     });
   };
-  add(input.quality?.findings,"QUALITY");
-  add(input.questions,"QUESTION");
-  add(input.gaps,"GAP");
-  add(input.dependencies,"DEPENDENCY");
-  add(input.risks,"RISK");
+  add(input.quality?.findings || input.qualityFindings || scope.quality?.findings,"QUALITY");
+  add(input.questions || scope.questions,"QUESTION");
+  add(input.gaps || scope.gaps,"GAP");
+  add(input.dependencies || scope.dependencies,"DEPENDENCY");
+  add(input.risks || scope.risks,"RISK");
   return blockers;
 }
 function importedMaturity(input,fallback,blockers){
-  const status=String(input.quality?.status||"").toLowerCase();
+  const scope=input.scope && typeof input.scope === "object" ? input.scope : {};
+  const status=String(input.quality?.status || input.qualityStatus || scope.quality?.status || "").toLowerCase();
   if(status.includes("blocked")) return "Blocked";
   if(status.includes("review")) return "Review Required";
   if(status.includes("execution") || status === "ready" || status === "approved") return "Execution Candidate";
-  if(Array.isArray(input.questions) && input.questions.length || Array.isArray(input.gaps) && input.gaps.length) return "Discovery Required";
+  if((Array.isArray(input.questions) && input.questions.length) || (Array.isArray(input.gaps) && input.gaps.length) || (Array.isArray(scope.questions) && scope.questions.length) || (Array.isArray(scope.gaps) && scope.gaps.length)) return "Discovery Required";
   return blockers.length ? "Review Required" : fallback;
 }
 function normaliseDeal(input, filename="Imported JSON"){

@@ -106,6 +106,14 @@ async function fire(id, type, event = {}) {
   assert.equal(state.deal.title, "Nested QA");
   assert.ok(state.deal.nodes.some(node => node.sourceIds.includes("42")));
 
+  const scoped = { title: "Scoped QA", scope: { questions: [{ id: "Q-1", question: "API contract?" }], gaps: [{ id: "G-1", summary: "Missing volume" }] }, quality: { status: "review-required" } };
+  const scopedFile = { name: "scoped.json", text: async () => JSON.stringify(scoped) };
+  await fire("jsonFile", "change", { target: { files: [scopedFile] } });
+  state = app.getState();
+  assert.equal(state.deal.maturity, "Review Required");
+  assert.ok(state.deal.blockers.some(blocker => blocker[0] === "Q-1"));
+  assert.ok(state.deal.blockers.some(blocker => blocker[0] === "G-1"));
+
   await fire("exportBtn", "click");
   const exported = JSON.parse(await CaptureBlob.last.text());
   assert.equal(exported.edges.length, 7);
