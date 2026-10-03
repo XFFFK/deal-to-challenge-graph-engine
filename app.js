@@ -285,6 +285,68 @@ function renderDependencyEditor(node){
   select.innerHTML=`<option value="">选择前置节点</option>`+state.deal.nodes.filter(candidate=>candidate.id!==node.id&&!deps.includes(candidate.id)).map(candidate=>`<option value="${esc(candidate.id)}">${esc(candidate.id)} · ${esc(candidate.title)}</option>`).join("");
   list.querySelectorAll("[data-remove-dep]").forEach(button=>button.addEventListener("click",()=>removeDependency(node.id,button.dataset.removeDep)));
 }
+function renderNodeEditor(node){
+  if(!node)return;
+  el("editTitle").value=node.title||"";
+  el("editObjective").value=node.objective||"";
+  el("editAcceptance").value=node.acceptance||"";
+  el("editDuration").value=Number(node.duration)||0;
+  const merge=el("mergeNodeSelect");
+  merge.innerHTML=`<option value="">选择合并节点</option>`+state.deal.nodes.filter(candidate=>candidate.id!==node.id).map(candidate=>`<option value="${esc(candidate.id)}">${esc(candidate.id)} · ${esc(candidate.title)}</option>`).join("");
+}
+function nextNodeId(){
+  const used=new Set(state.deal.nodes.map(node=>String(node.id)));
+  let number=state.deal.nodes.reduce((max,node)=>{const match=String(node.id).match(/^N(\d+)$/);return match?Math.max(max,Number(match[1])):max;},0)+1;
+  while(used.has(`N${number}`))number++;
+  return `N${number}`;
+}
+function showImpact(message){
+  el("impactNote").textContent=message;
+  el("impactNote").classList.remove("hidden");
+}
+function saveNode(){
+  const node=state.deal.nodes.find(item=>item.id===state.selectedNode);if(!node)return;
+  const title=el("editTitle").value.trim();if(!title){showImpact("未保存：节点标题不能为空。");return;}
+  const before=graphSnapshot();
+  node.title=title;
+  node.objective=el("editObjective").value.trim()||"待补充目标。";
+  node.acceptance=el("editAcceptance").value.trim()||"待补充可验证验收条件。";
+  node.duration=Math.max(0,Number(el("editDuration").value)||0);
+  node.provenance="User-approved edit";
+  node.executionPackage=buildExecutionPackage(node);
+  state.lastImpact=buildChangeImpact(before,[node.id]);
+  render();inspect(node.id);showImpact(`已保存 ${node.id} 的编辑。${formatImpact(state.lastImpact)}`);
+}
+function addNode(){
+  const before=graphSnapshot(), id=nextNodeId();
+  const node={id,title:"新建交付节点",category:"User decision",model:"flexible-talent",confidence:"medium",wave:1,duration:1,deps:[],sourceIds:[`USER-${id}`],readiness:"review-required",provenance:"User-approved addition",objective:"由用户批准的新增交付单元，待补充范围。",rationale:["该节点由用户添加，需要补充来源与验收信息。"],acceptance:"补充明确且可验证的验收条件。"};
+  state.deal.nodes.push(node);attachExecutionPackages(state.deal.nodes);state.selectedNode=id;state.lastImpact=buildChangeImpact(before,[id]);render();inspect(id);showImpact(`已新增 ${id}。${formatImpact(state.lastImpact)}`);
+}
+function removeNode(){
+  const node=state.deal.nodes.find(item=>item.id===state.selectedNode);if(!node)return;
+  const before=graphSnapshot(), removedId=node.id;
+  state.deal.nodes=state.deal.nodes.filter(item=>item.id!==removedId);
+  state.deal.nodes.forEach(item=>{item.deps=(item.deps||[]).filter(dep=>String(dep)!==String(removedId));item.executionPackage=buildExecutionPackage(item);});
+  state.selectedNode=null;state.lastImpact=buildChangeImpact(before,[removedId]);render();showImpact(`已删除 ${removedId}，并清理引用它的依赖。${formatImpact(state.lastImpact)}`);
+}
+function splitNode(){
+  const node=state.deal.nodes.find(item=>item.id===state.selectedNode);if(!node)return;
+  const before=graphSnapshot(), originalId=node.id, firstId=`${originalId}-A`, secondId=`${originalId}-B`;
+  const firstDuration=Math.max(1,Math.ceil((Number(node.duration)||0)/2)), secondDuration=Math.max(0,(Number(node.duration)||0)-firstDuration);
+  const first={...clone(node),id:firstId,title:`${node.title} · A`,duration:firstDuration,provenance:"User-approved split"};
+  const second={...clone(node),id:secondId,title:`${node.title} · B`,duration:secondDuration,deps:[firstId],provenance:"User-approved split"};
+  state.deal.nodes=state.deal.nodes.flatMap(item=>item.id===originalId?[first,second]:item);
+  state.deal.nodes.forEach(item=>{if(item.id!==firstId&&item.id!==secondId)item.deps=(item.deps||[]).map(dep=>String(dep)===String(originalId)?secondId:dep);});
+  attachExecutionPackages(state.deal.nodes);state.selectedNode=secondId;state.lastImpact=buildChangeImpact(before,[originalId,firstId,secondId]);render();inspect(secondId);showImpact(`已将 ${originalId} 拆分为 ${firstId}、${secondId}。${formatImpact(state.lastImpact)}`);
+}
+function mergeNode(){
+  const node=state.deal.nodes.find(item=>item.id===state.selectedNode), otherId=el("mergeNodeSelect").value, other=state.deal.nodes.find(item=>item.id===otherId);if(!node||!other)return;
+  const before=graphSnapshot(), keepId=node.id;
+  node.title=`${node.title} + ${other.title}`;node.objective=`${node.objective} ${other.objective}`.trim();node.acceptance=`${node.acceptance} ${other.acceptance}`.trim();node.duration=(Number(node.duration)||0)+(Number(other.duration)||0);node.deps=[...new Set([...(node.deps||[]),...(other.deps||[])])].filter(dep=>dep!==keepId&&dep!==other.id);node.sourceIds=[...new Set([...(node.sourceIds||[]),...(other.sourceIds||[])])];node.provenance="User-approved merge";node.readiness=node.readiness==="ready"&&other.readiness==="ready"?"ready":"review-required";
+  state.deal.nodes=state.deal.nodes.filter(item=>item.id!==other.id);
+  state.deal.nodes.forEach(item=>{if(item.id!==keepId)item.deps=(item.deps||[]).map(dep=>String(dep)===String(other.id)?keepId:dep);});
+  attachExecutionPackages(state.deal.nodes);state.selectedNode=keepId;state.lastImpact=buildChangeImpact(before,[keepId,other.id]);render();inspect(keepId);showImpact(`已合并 ${keepId} 与 ${other.id}。${formatImpact(state.lastImpact)}`);
+}
 function graphSnapshot(){
   return {nodes:clone(state.deal.nodes),metrics:graphMetrics(clone(state.deal.nodes))};
 }
@@ -346,7 +408,7 @@ function inspect(id){
   el("inspectorTitle").textContent=n.title; el("provenanceBadge").textContent=n.provenance; el("inspectorEmpty").classList.add("hidden");el("inspectorBody").classList.remove("hidden");
   el("inspectorModel").className=`model-tag ${modelClass(n.model)}`;el("inspectorModel").textContent=modelMeta(n.model).label;el("inspectorReady").textContent=n.readiness;
   el("inspectorObjective").textContent=n.objective; el("inspectorRationale").innerHTML=n.rationale.map(x=>`<li>${esc(x)}</li>`).join("");el("inspectorSources").innerHTML=n.sourceIds.map(x=>`<span class="source-chip">${esc(x)}</span>`).join("");el("inspectorAcceptance").textContent=n.acceptance;el("overrideModel").value=n.model;
-  renderExecutionPackage(n);renderDependencyEditor(n);if(state.lastImpact)el("impactNote").classList.remove("hidden");else el("impactNote").classList.add("hidden"); renderGraph(); renderNodes();
+  renderExecutionPackage(n);renderDependencyEditor(n);renderNodeEditor(n);if(state.lastImpact)el("impactNote").classList.remove("hidden");else el("impactNote").classList.add("hidden"); renderGraph(); renderNodes();
 }
 function renderQuality(){
   const metrics=graphMetrics();
@@ -379,6 +441,11 @@ el("jsonFile").addEventListener("change",async event=>{const file=event.target.f
 el("modelFilter").addEventListener("change",event=>{state.modelFilter=event.target.value;renderNodes();});
 el("runQualityBtn").addEventListener("click",()=>{renderQuality();const btn=el("runQualityBtn");btn.textContent="已完成 ✓";setTimeout(()=>btn.textContent="运行质量门",1200);});
 el("applyOverrideBtn").addEventListener("click",()=>{const n=state.deal.nodes.find(x=>x.id===state.selectedNode);if(!n)return;const next=el("overrideModel").value;if(next===n.model)return;const before=graphSnapshot();const previous=n.model;n.model=next;n.provenance="User-approved override";n.executionPackage=buildExecutionPackage(n);state.overrideHistory.push({nodeId:n.id,from:previous,to:next,at:new Date().toISOString()});const impact=buildChangeImpact(before,[n.id]);state.lastImpact=impact;render();inspect(n.id);el("impactNote").textContent=`已记录覆盖：${modelMeta(previous).label} → ${modelMeta(next).label}。${formatImpact(impact)}`;el("impactNote").classList.remove("hidden");});
+el("saveNodeBtn")?.addEventListener("click",saveNode);
+el("addNodeBtn")?.addEventListener("click",addNode);
+el("removeNodeBtn")?.addEventListener("click",removeNode);
+el("splitNodeBtn")?.addEventListener("click",splitNode);
+el("mergeNodeBtn")?.addEventListener("click",mergeNode);
 el("addDependencyBtn")?.addEventListener("click",addDependency);
 el("exportPlanBtn")?.addEventListener("click",exportPlan);
 el("exportBtn").addEventListener("click",exportGraph);

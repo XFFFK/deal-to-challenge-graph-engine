@@ -28,7 +28,7 @@ node .\qa-smoke.cjs
 ## 已实现的演示流程
 
 1. **导入与成熟度**：保留导入的 source package，显示成熟度、分数、阻塞项和输入校验结果。导入未知结构时，原始 `id` 字段会被用作 traceability refs。
-2. **节点与三模型**：每个节点有工作类别、来源 ID、readiness、验收条件、分类置信度和分类理由。节点可以在 Inspector 中被用户覆盖 operating model，覆盖历史会进入导出 JSON。
+2. **节点与三模型**：每个节点有工作类别、来源 ID、readiness、验收条件、分类置信度和分类理由。Inspector 支持编辑、增加、删除、拆分和合并节点；用户编辑与 operating-model 覆盖都会保留在变更影响和导出 JSON 中。
 3. **模型执行包**：每个节点都会生成对应的 Flexible Talent、Challenge 或 Private Pod package 预览，包含角色/技能、输入、交付物、验收、访问与评审信息；Inspector 中可以直接审阅。
 4. **DAG / 波次 / 关键路径**：依赖关系生成可视化 DAG；Inspector 可以添加或移除前置依赖，环路会被拒绝；变更会显示受影响节点、波次、关键路径和需要复核的执行包。
 5. **质量门**：检查来源覆盖、模型完整性、模型包、依赖引用、重复/自依赖、孤立节点、环路、阻塞项和关键路径计算，状态明确显示为 `READY`、`REVIEW REQUIRED` 或 `BLOCKED`。
@@ -47,6 +47,6 @@ node .\qa-smoke.cjs
 
 ## 设计边界
 
-- 这是 deterministic mock mode，不声称 AI 生成了事实；节点的 `provenance` 明确标记为 `AI-recommended`、`User-approved override` 或 `Imported`。
+- 这是 deterministic mock mode，不声称 AI 生成了事实；节点的 `provenance` 明确标记为 `AI-recommended`、`User-approved edit/add/split/merge/override` 或 `Imported`。
 - UI 不执行真实招聘、资金批准、Challenge 发布、账号登录或外部通信。
 - 当前 SVG 箭头为轻量演示布局；真实生产版应接入布局引擎并将 dependency 编辑持久化。

@@ -12,7 +12,8 @@ const ids = [
   "inspectorAcceptance", "overrideModel", "impactNote", "qualityChecks", "qualityGateBadge",
   "executionPackage", "dependencyList", "dependencySelect", "addDependencyBtn", "exportPlanBtn",
   "sampleSelect", "loadSampleBtn", "jsonFile", "importStatus", "modelFilter", "runQualityBtn",
-  "applyOverrideBtn", "exportBtn"
+  "applyOverrideBtn", "exportBtn", "addNodeBtn", "saveNodeBtn", "removeNodeBtn", "splitNodeBtn",
+  "mergeNodeSelect", "mergeNodeBtn", "editTitle", "editDuration", "editObjective", "editAcceptance"
 ];
 
 function makeElement(id) {
@@ -85,6 +86,34 @@ async function fire(id, type, event = {}) {
   state = app.getState();
   assert.ok(state.deal.nodes.find(n => n.id === "N6").deps.includes("N3"));
   assert.ok(state.lastImpact.affectedNodeIds.includes("N6"));
+
+  elements.get("editTitle").value = "受控试点交付（修订）";
+  elements.get("editObjective").value = "补充试点监控与回滚演练。";
+  elements.get("editAcceptance").value = "监控告警与回滚路径可复现。";
+  elements.get("editDuration").value = "4";
+  await fire("saveNodeBtn", "click");
+  state = app.getState();
+  assert.equal(state.deal.nodes.find(n => n.id === "N6").title, "受控试点交付（修订）");
+  assert.equal(state.deal.nodes.find(n => n.id === "N6").provenance, "User-approved edit");
+
+  await fire("addNodeBtn", "click");
+  state = app.getState();
+  assert.equal(state.deal.nodes.length, 7);
+  const addedId = state.selectedNode;
+  assert.ok(state.deal.nodes.find(n => n.id === addedId).sourceIds.includes(`USER-${addedId}`));
+  await fire("splitNodeBtn", "click");
+  state = app.getState();
+  assert.equal(state.deal.nodes.length, 8);
+  assert.ok(state.deal.nodes.find(n => n.id === `${addedId}-B`).deps.includes(`${addedId}-A`));
+  elements.get("mergeNodeSelect").value = `${addedId}-A`;
+  await fire("mergeNodeBtn", "click");
+  state = app.getState();
+  assert.equal(state.deal.nodes.length, 7);
+  assert.equal(state.deal.nodes.some(n => n.id === `${addedId}-A`), false);
+  await fire("removeNodeBtn", "click");
+  state = app.getState();
+  assert.equal(state.deal.nodes.length, 6);
+  assert.equal(state.deal.nodes.some(n => n.id === `${addedId}-B`), false);
 
   elements.get("sampleSelect").value = "claims";
   await fire("loadSampleBtn", "click");

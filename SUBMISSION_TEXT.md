@@ -8,6 +8,7 @@ The browser workflow supports:
 
 - four supplied package shapes through a shared normalization layer;
 - Flexible Talent, Challenge, and Private Pod classifications with rationales and confidence;
+- node editing, addition, removal, split, and merge controls with user-decision provenance;
 - dependency editing with cycle rejection, execution waves, and critical-path analysis;
 - change-impact analysis when a node, model, or dependency changes;
 - deterministic quality gates for coverage, references, readiness, duplicates, orphans, cycles, and critical path;
