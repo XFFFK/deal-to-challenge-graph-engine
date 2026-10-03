@@ -40,6 +40,41 @@ function makeFallbackNodes(kind){
 }
 let state = {deal: null, sourcePackage: null, selectedNode: null, modelFilter:"all", overrideHistory:[]};
 
+function itemText(item, keys, fallback){
+  if(typeof item === "string" || typeof item === "number") return String(item);
+  if(!item || typeof item !== "object") return fallback;
+  for(const key of keys){
+    const value=item[key];
+    if(typeof value === "string" && value.trim()) return value.trim();
+  }
+  return fallback;
+}
+function importedBlockers(input){
+  const blockers=[];
+  const add=(items,prefix)=>{
+    if(!Array.isArray(items)) return;
+    items.forEach((item,index)=>{
+      const id=itemText(item,["id","itemId","questionId","gapId","riskId","dependencyId"],`${prefix}-${String(index+1).padStart(2,"0")}`);
+      const title=itemText(item,["title","name","summary","question","type"],`${prefix} requires review`);
+      const description=itemText(item,["description","detail","reason","value","answer"],"Imported item is unresolved and should be reviewed before handoff.");
+      blockers.push([id,title,description]);
+    });
+  };
+  add(input.quality?.findings,"QUALITY");
+  add(input.questions,"QUESTION");
+  add(input.gaps,"GAP");
+  add(input.dependencies,"DEPENDENCY");
+  add(input.risks,"RISK");
+  return blockers;
+}
+function importedMaturity(input,fallback,blockers){
+  const status=String(input.quality?.status||"").toLowerCase();
+  if(status.includes("blocked")) return "Blocked";
+  if(status.includes("review")) return "Review Required";
+  if(status.includes("execution") || status === "ready" || status === "approved") return "Execution Candidate";
+  if(Array.isArray(input.questions) && input.questions.length || Array.isArray(input.gaps) && input.gaps.length) return "Discovery Required";
+  return blockers.length ? "Review Required" : fallback;
+}
 function normaliseDeal(input, filename="Imported JSON"){
   input = input && typeof input === "object" ? input : {};
   const text = JSON.stringify(input).toLowerCase();
@@ -50,7 +85,10 @@ function normaliseDeal(input, filename="Imported JSON"){
   const titleCandidates = [input.name, input.title, input.deal?.name, input.deal?.title, input.metadata?.name, input.metadata?.title];
   template.title = titleCandidates.find(value=>typeof value === "string" && value.trim())?.trim() || filename.replace(/\.json$/i,"") || template.title;
   template.nodes = template.nodes.length ? template.nodes : makeFallbackNodes(kind);
-  template.blockers = template.blockers.length ? template.blockers : [["B-01","Needs review","Imported package has no deterministic blocker summary; review source fields before handoff."]];
+  const blockers=importedBlockers(input);
+  template.blockers = blockers.length ? blockers : (template.blockers.length ? template.blockers : [["B-01","Needs review","Imported package has no deterministic blocker summary; review source fields before handoff."]]);
+  template.maturity = importedMaturity(input,template.maturity,blockers);
+  template.maturityDescription = template.maturity === "Execution Candidate" ? "Imported quality signals support execution planning." : "Imported questions, gaps, risks, or findings require review before handoff.";
   template.score = Math.max(22, Math.min(92, template.score - Math.max(0, template.blockers.length-2)*4));
   attachExecutionPackages(template.nodes);
   template.sourceCount = Math.max(ids.length, template.nodes.reduce((sum,n)=>sum+n.sourceIds.length,0));
