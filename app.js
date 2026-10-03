@@ -101,25 +101,25 @@ function importedEvidence(input){
   add("Delivery phase",firstItems(input.phases,delivery.phases));
   return evidence.filter(item=>item.id || item.title);
 }
-function collectRawIds(value, out=[]){
-  if(Array.isArray(value)){value.forEach(item=>collectRawIds(item,out)); return out;}
+function collectDefinitionIds(value, out=[]){
+  if(Array.isArray(value)){value.forEach(item=>collectDefinitionIds(item,out)); return out;}
   if(value && typeof value === "object"){
     Object.entries(value).forEach(([key,item])=>{
       const name=key.toLowerCase();
-      if((name === "id" || name.endsWith("id")) && (typeof item === "string" || typeof item === "number") && String(item).length < 100) out.push(String(item));
-      collectRawIds(item,out);
+      if(name === "id" && (typeof item === "string" || typeof item === "number") && String(item).length < 100) out.push(String(item));
+      collectDefinitionIds(item,out);
     });
   }
   return out;
 }
-function validateImportedPackage(input, filename, title, ids, evidence){
+function validateImportedPackage(input, filename, title, identifiers, definitionIds, evidence){
   const isObject=Boolean(input && typeof input === "object" && !Array.isArray(input));
   const checks=[
     ["JSON object",isObject],
-    ["Package identifier",ids.length>0],
+    ["Package identifier",identifiers.length>0],
     ["Package title",Boolean(title)],
     ["Executable source evidence",evidence.length>0],
-    ["Unique identifiers",new Set(ids).size===ids.length]
+    ["Unique identifiers",new Set(definitionIds).size===definitionIds.length]
   ];
   const issues=checks.filter(([,passed])=>!passed).map(([label])=>label);
   return {filename,checks:checks.map(([label,passed])=>({label,passed})),passed:checks.filter(([,passed])=>passed).length,total:checks.length,issues};
@@ -130,7 +130,7 @@ function normaliseDeal(input, filename="Imported JSON"){
   const kind = text.includes("claimsdesk") ? "claims" : text.includes("member experience") || text.includes("early discovery") ? "member" : text.includes("supply chain") ? "supply" : "clinical";
   const template = clone(SAMPLE_DEALS[kind]);
   const ids = collectIds(input);
-  const rawIds = collectRawIds(input);
+  const definitionIds = collectDefinitionIds(input);
   const evidence = importedEvidence(input);
   if (ids.length) template.nodes.forEach((n,i)=>{n.sourceIds = ids.slice(i, i+Math.max(1,n.sourceIds.length)).map(x=>String(x));});
   const titleCandidates = [input.name, input.title, input.deal?.name, input.deal?.title, input.metadata?.name, input.metadata?.title];
@@ -138,7 +138,7 @@ function normaliseDeal(input, filename="Imported JSON"){
   template.title = importedTitle;
   template.nodes = template.nodes.length ? template.nodes : makeFallbackNodes(kind);
   const blockers=importedBlockers(input);
-  template.validation=validateImportedPackage(input,filename,importedTitle,rawIds,evidence);
+  template.validation=validateImportedPackage(input,filename,importedTitle,ids,definitionIds,evidence);
   template.blockers = blockers.length ? blockers : (template.blockers.length ? template.blockers : [["B-01","Needs review","Imported package has no deterministic blocker summary; review source fields before handoff."]]);
   template.maturity = importedMaturity(input,template.maturity,blockers);
   template.maturityDescription = template.maturity === "Execution Candidate" ? "Imported quality signals support execution planning." : "Imported questions, gaps, risks, or findings require review before handoff.";

@@ -140,6 +140,12 @@ async function fire(id, type, event = {}) {
   assert.equal(state.deal.title, "Nested QA");
   assert.ok(state.deal.nodes.some(node => node.sourceIds.includes("42")));
 
+  const referenced = { id: "DEAL-REF", title: "Referenced IDs", requirements: [{ id: "REQ-1", title: "Traceable requirement" }], links: [{ requirementId: "REQ-1" }, { requirementId: "REQ-1" }] };
+  const referencedFile = { name: "referenced.json", text: async () => JSON.stringify(referenced) };
+  await fire("jsonFile", "change", { target: { files: [referencedFile] } });
+  state = app.getState();
+  assert.equal(state.deal.validation.issues.length, 0);
+
   elements.get("jsonPaste").value = JSON.stringify({ title: "Pasted QA", requirements: [{ id: "REQ-P-1", title: "Paste path" }] });
   await fire("loadPasteBtn", "click");
   state = app.getState();
