@@ -13,7 +13,7 @@ const ids = [
   "executionPackage", "dependencyList", "dependencySelect", "addDependencyBtn", "exportPlanBtn",
   "sampleSelect", "loadSampleBtn", "jsonFile", "importStatus", "modelFilter", "runQualityBtn",
   "applyOverrideBtn", "exportBtn", "addNodeBtn", "saveNodeBtn", "removeNodeBtn", "splitNodeBtn",
-  "mergeNodeSelect", "mergeNodeBtn", "editTitle", "editDuration", "editObjective", "editAcceptance",
+  "mergeNodeSelect", "mergeNodeBtn", "editTitle", "editDuration", "editObjective", "editAcceptance", "editReadiness",
   "jsonPaste", "loadPasteBtn"
 ];
 
@@ -92,10 +92,12 @@ async function fire(id, type, event = {}) {
   elements.get("editObjective").value = "补充试点监控与回滚演练。";
   elements.get("editAcceptance").value = "监控告警与回滚路径可复现。";
   elements.get("editDuration").value = "4";
+  elements.get("editReadiness").value = "blocked";
   await fire("saveNodeBtn", "click");
   state = app.getState();
   assert.equal(state.deal.nodes.find(n => n.id === "N6").title, "受控试点交付（修订）");
   assert.equal(state.deal.nodes.find(n => n.id === "N6").provenance, "User-approved edit");
+  assert.equal(state.deal.nodes.find(n => n.id === "N6").readiness, "blocked");
 
   await fire("addNodeBtn", "click");
   state = app.getState();

@@ -319,6 +319,7 @@ function renderNodeEditor(node){
   el("editObjective").value=node.objective||"";
   el("editAcceptance").value=node.acceptance||"";
   el("editDuration").value=Number(node.duration)||0;
+  el("editReadiness").value=node.readiness||"review-required";
   const merge=el("mergeNodeSelect");
   merge.innerHTML=`<option value="">选择合并节点</option>`+state.deal.nodes.filter(candidate=>candidate.id!==node.id).map(candidate=>`<option value="${esc(candidate.id)}">${esc(candidate.id)} · ${esc(candidate.title)}</option>`).join("");
 }
@@ -340,6 +341,7 @@ function saveNode(){
   node.objective=el("editObjective").value.trim()||"待补充目标。";
   node.acceptance=el("editAcceptance").value.trim()||"待补充可验证验收条件。";
   node.duration=Math.max(0,Number(el("editDuration").value)||0);
+  node.readiness=["ready","review-required","blocked"].includes(el("editReadiness").value)?el("editReadiness").value:"review-required";
   node.provenance="User-approved edit";
   node.executionPackage=buildExecutionPackage(node);
   state.lastImpact=buildChangeImpact(before,[node.id]);
